@@ -28,7 +28,7 @@
     </script>
 
     
-    <link rel="stylesheet" href="./style.css?v=5">
+    <link rel="stylesheet" href="./style.css?v=6">
 
 
 
@@ -37,62 +37,143 @@
 <body class="bg-white font-sans text-dark leading-relaxed">
 
    
-    <!-- LIGHT INTRO OVERLAY -->
-    <div id="light-overlay">
-    <div class="intro-inner">
+ <!-- SMART BUILDING INTRO OVERLAY -->
+<div id="light-overlay" class="smart-overlay">
+    <div class="smart-bg-grid" aria-hidden="true"></div>
+    <div class="smart-bg-glow" aria-hidden="true"></div>
 
-        <div class="intro-left">
-            <div class="intro-step">Meisterbetrieb Hameln</div>
-            <h2>Licht an<br>für Ihr Projekt.</h2>
-            <p>Ein kurzer Zug - und intelligente Elektrotechnik wird erlebbar.</p>
+    <div class="smart-intro-inner">
 
+        <div class="smart-intro-left">
+            <div class="intro-step">Gebäudeautomation / KNX</div>
 
-            <div class="pull-start" id="pull-start-button" aria-hidden="true">
-                <div class="pull-icon"></div>
-                <span>Licht Einschalten→</span>
+            <h2>
+                Gebäude<br>
+                intelligent<br>
+                steuern.
+            </h2>
+
+            <p>
+                Licht, Beschattung, Heizung, Sicherheit und Energie werden zu einem vernetzten System.
+            </p>
+
+            <div class="smart-start" id="pull-start-button" role="button" tabindex="0" aria-label="Gebäudeautomation starten">
+                <div class="smart-start-pulse"></div>
+
+                <div class="smart-start-icon" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <strong>System starten</strong>
             </div>
         </div>
 
-        <div class="intro-stage">
-            <div class="lamp-system" id="light-switch" aria-label="Licht einschalten" role="button" tabindex="0">
-                <svg class="lamp-wire" viewBox="0 0 120 330" aria-hidden="true">
-                    <path class="lamp-wire-path" d="M60 0 C60 90 60 180 60 330"></path>
-                </svg>
+        <div class="smart-intro-stage">
+            <div class="smart-control-system" id="light-switch" aria-label="Gebäudeautomation aktivieren" role="button" tabindex="0">
 
-                <div class="lamp-light"></div>
-                <div class="light-trail"></div>
+                <div class="smart-panel">
+                    <div class="panel-topbar">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
 
-                <div class="lamp-head">
-                    <div class="lamp-cap"></div>
-                    <div class="lamp-shade"></div>
+                    <div class="panel-content">
+                        <div class="panel-label">BT ELEKTROTECHNIK</div>
+
+                        <div class="knx-core">
+                            <div class="knx-ring ring-one"></div>
+                            <div class="knx-ring ring-two"></div>
+                            <div class="knx-ring ring-three"></div>
+
+                            <div class="knx-chip">
+                                <strong>KNX</strong>
+                                <small>BUS</small>
+                            </div>
+                        </div>
+
+                        <div class="panel-status-grid">
+                            <div>
+                                <span>Licht</span>
+                                <strong>Bereit</strong>
+                            </div>
+
+                            <div>
+                                <span>Beschattung</span>
+                                <strong>Standby</strong>
+                            </div>
+
+                            <div>
+                                <span>Klima</span>
+                                <strong>Auto</strong>
+                            </div>
+
+                            <div>
+                                <span>Energie</span>
+                                <strong>Optimiert</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="lamp-socket"></div>
-                <div class="lamp-bulb"></div>
-                
-                
-        <div class="mobile-pull-chain" aria-hidden="true">
-            <div class="mobile-chain-line"></div>
-            <div class="mobile-chain-handle"></div>
-        </div>
+                <div class="smart-line line-light"></div>
+                <div class="smart-line line-shading"></div>
+                <div class="smart-line line-climate"></div>
+                <div class="smart-line line-energy"></div>
 
-                <div class="intro-brand">
+                <div class="smart-node node-light">
+                    <span></span>
+                    <strong>Licht</strong>
+                    <small>Szenen</small>
+                </div>
+
+                <div class="smart-node node-shading">
+                    <span></span>
+                    <strong>Beschattung</strong>
+                    <small>Raffstore</small>
+                </div>
+
+                <div class="smart-node node-climate">
+                    <span></span>
+                    <strong>Klima</strong>
+                    <small>Heizung</small>
+                </div>
+
+                <div class="smart-node node-energy">
+                    <span></span>
+                    <strong>Energie</strong>
+                    <small>Monitoring</small>
+                </div>
+
+                <div class="smart-brand">
                     <strong>BT</strong>
                     <span>Elektrotechnik</span>
-                    <small>Smart Energy. Perfectly Connected.</small>
+                    <small>Smart Building. Sauber geplant.</small>
                 </div>
             </div>
         </div>
 
-        
+        <div class="smart-intro-right">
+            <div class="smart-data-card">
+                <span>Status</span>
+                <strong>System bereit</strong>
+            </div>
 
-        <div class="intro-right">
-            <div class="intro-right-line"></div>
-            <p>Bewegung. Licht. Erlebnis.</p>
+            <div class="smart-data-card">
+                <span>Technik</span>
+                <strong>KNX / Smart Home</strong>
+            </div>
+
+            <div class="smart-data-card">
+                <span>Fokus</span>
+                <strong>Komfort. Effizienz. Kontrolle.</strong>
+            </div>
         </div>
 
     </div>
-    </div>
+</div>
     
 
     <nav class="fixed w-full z-50 bg-[#2A2A2A]/95 backdrop-blur-md border-b border-white/10 py-4">
@@ -439,7 +520,7 @@
         </div>
     </footer>
 
-    <script src="./script.js?v=5" defer></script>
+    <script src="./script.js?v=6" defer></script>
 
     <!-- COOKIE / PRIVACY NOTICE -->
     <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite">
