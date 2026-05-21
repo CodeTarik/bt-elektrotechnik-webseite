@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BT Elektrotechnik | Elektroinstallation & Smart Home Hameln</title>
+    <meta name="description" content="BT Elektrotechnik in Hameln – Ihr Spezialist für Elektroinstallation, Gebäudeautomation und E-Mobility.">
+    
+    <link rel="icon" type="image/png" href="./images/netzstecker.png">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#F5A623',
+                        dark: '#1C1C1C',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        condensed: ['Barlow Condensed', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    
+    <link rel="stylesheet" href="./style.css?v=5">
+
+
+
+</head>
+
+<body class="bg-white font-sans text-dark leading-relaxed">
+
+   
+    <!-- LIGHT INTRO OVERLAY -->
+    <div id="light-overlay">
+    <div class="intro-inner">
+
+        <div class="intro-left">
+            <div class="intro-step">Meisterbetrieb Hameln</div>
+            <h2>Licht an<br>für Ihr Projekt.</h2>
+            <p>Ein kurzer Zug - und intelligente Elektrotechnik wird erlebbar.</p>
+
+
+            <div class="pull-start" id="pull-start-button" aria-hidden="true">
+                <div class="pull-icon"></div>
+                <span>Licht Einschalten→</span>
+            </div>
+        </div>
+
+        <div class="intro-stage">
+            <div class="lamp-system" id="light-switch" aria-label="Licht einschalten" role="button" tabindex="0">
+                <svg class="lamp-wire" viewBox="0 0 120 330" aria-hidden="true">
+                    <path class="lamp-wire-path" d="M60 0 C60 90 60 180 60 330"></path>
+                </svg>
+
+                <div class="lamp-light"></div>
+                <div class="light-trail"></div>
+
+                <div class="lamp-head">
+                    <div class="lamp-cap"></div>
+                    <div class="lamp-shade"></div>
+                </div>
+
+                <div class="lamp-socket"></div>
+                <div class="lamp-bulb"></div>
+                
+                
+        <div class="mobile-pull-chain" aria-hidden="true">
+            <div class="mobile-chain-line"></div>
+            <div class="mobile-chain-handle"></div>
+        </div>
+
+                <div class="intro-brand">
+                    <strong>BT</strong>
+                    <span>Elektrotechnik</span>
+                    <small>Smart Energy. Perfectly Connected.</small>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <div class="intro-right">
+            <div class="intro-right-line"></div>
+            <p>Bewegung. Licht. Erlebnis.</p>
+        </div>
+
+    </div>
+    </div>
+    
+
+    <nav class="fixed w-full z-50 bg-[#2A2A2A]/95 backdrop-blur-md border-b border-white/10 py-4">
+        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <a href="#" class="flex items-center justify-center md:justify-start gap-3">
+                <img src="./images/bt-logo-transparent-navbar.png" alt="BT Elektrotechnik Logo" class="w-20 h-10">
+                <!-- <div class="text-white font-condensed text-2xl font-bold tracking-tighter">
+                    BT <span class="text-gold">ELEKTROTECHNIK</span>
+                </div> -->
+            </a>
+
+            <div class="flex items-center justify-center gap-8 md:gap-10 text-white/80 text-sm font-semibold uppercase tracking-wider">
+                <a href="#leistungen" class="hover:text-gold transition-colors">Leistungen</a>
+                <a href="#ueber-uns" class="hover:text-gold transition-colors">Über uns</a>
+                <a href="#kontakt" class="hover:text-gold transition-colors">Kontakt</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative min-h-screen flex items-center hero-gradient text-white pt-20">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div class="z-10">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-0.5 bg-gold"></div>
+                    <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase">Meisterbetrieb Hameln</span>
+                </div>
+                <h1 class="font-condensed text-6xl md:text-8xl font-extrabold leading-[0.9] mb-6 uppercase italic">
+                    Elektrotechnik,<br>die <span class="text-gold">begeistert.</span>
+                </h1>
+                <p class="text-gray-400 text-lg mb-8 max-w-md">
+                    Präzision aus Hameln. Spezialisiert auf Planung, Installation und intelligente Gebäudeautomation.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#kontakt" class="bg-gold text-white px-8 py-4 rounded-full font-bold uppercase text-sm hover:bg-white hover:text-dark transition-all">Jetzt anfragen</a>
+                    <a href="#leistungen" class="border border-white/20 px-8 py-4 rounded-full font-bold uppercase text-sm hover:bg-white/10 transition-all">Unsere Leistungen</a>
+                </div>
+            </div>
+            <div class="hidden md:block relative">
+                <div class="absolute -inset-4 border border-gold/30 rounded-2xl"></div>
+                <img src="./images/btelektr.titel.png" alt="Elektrotechnik" class="rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition-all duration-700">
+            </div>
+        </div>
+    </section>
+
+   <section id="leistungen" class="py-28 services-bg">
+    <div class="container mx-auto px-6">
+        <div class="mb-16">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-0.5 bg-gold"></div>
+                <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase">Unsere Leistungen</span>
+            </div>
+
+            <h2 class="font-condensed text-5xl md:text-6xl font-extrabold uppercase italic leading-tight">
+                Unsere <span class="text-gold">Spezialgebiete</span>
+            </h2>
+
+            <p class="text-gray-500 mt-4 max-w-3xl leading-8">
+                Moderne Elektrotechnik ist mehr als nur Strom. Wir verbinden fachgerechte Installation,
+                intelligente Gebäudetechnik und saubere Planung zu Lösungen, die sicher, komfortabel
+                und zukunftsfähig sind – für Privatkunden, Gewerbe und moderne Gebäudeprojekte.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Elektroinstallation -->
+            <div class="service-card reveal delay-1 p-8 border border-gray-200 rounded-3xl bg-white">
+                <div class="text-gold mb-6 service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                </div>
+
+                <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase">
+                    Elektroinstallation
+                </h3>
+
+                <p class="text-gray-500 text-sm leading-7 mb-5">
+                    Fachgerechte Elektroinstallationen für Neubau, Sanierung, Modernisierung und Gewerbe.
+                    Von der Steckdose bis zur kompletten Gebäudeinstallation setzen wir Ihr Projekt
+                    sauber, sicher und normgerecht um.
+                </p>
+
+                <ul class="space-y-3 text-sm text-gray-500">
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Neubau- und Sanierungsinstallationen</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Licht-, Steckdosen- und Schalterprogramme</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Leitungsführung, Absicherung und Unterverteilungen</li>
+                </ul>
+            </div>
+
+            <!-- Smart Home / KNX -->
+            <div class="service-card service-card-dark reveal delay-2 p-8 border border-gold/30 bg-dark rounded-3xl text-white shadow-xl shadow-gold/10">
+                <div class="text-gold mb-6 service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7"/>
+                        <path d="M5 10v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10"/>
+                        <path d="M9 21v-6h6v6"/>
+                    </svg>
+                </div>
+
+                <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase text-gold">
+                    Smart Home & KNX
+                </h3>
+
+                <p class="text-gray-300 text-sm leading-7 mb-5">
+                    Intelligente Gebäudetechnik für mehr Komfort, Effizienz und Kontrolle. Wir planen
+                    und realisieren smarte Systeme, mit denen Licht, Beschattung, Heizung und Szenen
+                    zentral gesteuert werden können.
+                </p>
+
+                <ul class="space-y-3 text-sm text-gray-300">
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> KNX-Gebäudeautomation</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Licht-, Jalousie- und Heizungssteuerung</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Bedienpanels, Szenen und smarte Funktionen</li>
+                </ul>
+            </div>
+
+            <!-- Elektroplanung -->
+            <div class="service-card reveal delay-3 p-8 border border-gray-200 rounded-3xl bg-white">
+                <div class="text-gold mb-6 service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16v16H4z"/>
+                        <path d="M8 8h8"/>
+                        <path d="M8 12h8"/>
+                        <path d="M8 16h5"/>
+                    </svg>
+                </div>
+
+                <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase">
+                    Elektroplanung
+                </h3>
+
+                <p class="text-gray-500 text-sm leading-7 mb-5">
+                    Gute Elektrotechnik beginnt mit einer durchdachten Planung. Wir betrachten Nutzung,
+                    Anforderungen und Zukunftssicherheit, damit Ihre Anlage nicht nur heute, sondern
+                    auch langfristig zuverlässig funktioniert.
+                </p>
+
+                <ul class="space-y-3 text-sm text-gray-500">
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Bedarfsermittlung und technische Konzeption</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Planung von Stromkreisen und Verteilungen</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Abstimmung von Technik, Komfort und Sicherheit</li>
+                </ul>
+            </div>
+
+            <!-- Verteilerbau -->
+            <div class="service-card reveal delay-1 p-8 border border-gray-200 rounded-3xl bg-white">
+                <div class="text-gold mb-6 service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="3" width="16" height="18" rx="2"/>
+                        <path d="M8 7h8"/>
+                        <path d="M8 11h8"/>
+                        <path d="M8 15h8"/>
+                    </svg>
+                </div>
+
+                <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase">
+                    Verteilungen & Anlagen
+                </h3>
+
+                <p class="text-gray-500 text-sm leading-7 mb-5">
+                    Elektroverteilungen sind das Herzstück einer Anlage. Wir kümmern uns um Aufbau,
+                    Erweiterung und Modernisierung von Verteilungen – übersichtlich, wartungsfreundlich
+                    und fachgerecht ausgeführt.
+                </p>
+
+                <ul class="space-y-3 text-sm text-gray-500">
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Unterverteilungen und Hauptverteilungen</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Erweiterung bestehender Anlagen</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Saubere Verdrahtung und strukturierter Aufbau</li>
+                </ul>
+            </div>
+
+            <!-- E-Mobility -->
+            <div class="service-card reveal delay-2 p-8 border border-gray-200 rounded-3xl bg-white">
+                <div class="text-gold mb-6 service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 2h10v20H7z"/>
+                        <path d="M11 6h2"/>
+                        <path d="M9 18h6"/>
+                        <path d="M17 8h2a2 2 0 0 1 2 2v5a3 3 0 0 1-3 3h-1"/>
+                    </svg>
+                </div>
+
+                <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase">
+                    E-Mobility
+                </h3>
+
+                <p class="text-gray-500 text-sm leading-7 mb-5">
+                    Wir schaffen die Grundlage für komfortables Laden zu Hause oder im gewerblichen
+                    Bereich. Von der Leitungsführung bis zur Absicherung wird die Ladeinfrastruktur
+                    passend zur vorhandenen Elektroanlage umgesetzt.
+                </p>
+
+                <ul class="space-y-3 text-sm text-gray-500">
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Vorbereitung und Anschluss von Wallboxen</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Prüfung der vorhandenen Elektroanlage</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Fachgerechte Absicherung und Einbindung</li>
+                </ul>
+            </div>
+
+            <!-- Prüfung und Sicherheit -->
+            <div class="service-card service-card-dark reveal delay-3 p-8 border border-gold/30 bg-dark rounded-3xl text-white shadow-xl shadow-gold/10">
+                <div class="text-gold mb-6 service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 11l3 3L22 4"/>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                </div>
+
+                <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase text-gold">
+                    Prüfung & Sicherheit
+                </h3>
+
+                <p class="text-gray-300 text-sm leading-7 mb-5">
+                    Sicherheit steht bei elektrotechnischen Anlagen an erster Stelle. Wir prüfen,
+                    analysieren und optimieren bestehende Installationen, damit Funktion, Schutz
+                    und Betriebssicherheit gewährleistet bleiben.
+                </p>
+
+                <ul class="space-y-3 text-sm text-gray-300">
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Fehlersuche und Instandsetzung</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Prüfung bestehender Elektroanlagen</li>
+                    <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Modernisierung für mehr Sicherheit</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+    <section id="ueber-uns" class="py-28 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-14 items-center">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-0.5 bg-gold"></div>
+                    <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase">Über uns</span>
+                </div>
+
+                <h2 class="font-condensed text-5xl md:text-6xl font-extrabold uppercase italic leading-tight mb-6">
+                    Elektrotechnik aus <span class="text-gold">Meisterhand</span>
+                </h2>
+
+                <p class="text-gray-500 leading-8 mb-6">
+                    BT Elektrotechnik steht für zuverlässige, saubere und zukunftsorientierte Elektrotechnik in Hameln und Umgebung. Der Anspruch ist, elektrotechnische Anlagen nicht nur funktional, sondern sicher, durchdacht und langfristig zuverlässig umzusetzen.
+                </p>
+
+                <p class="text-gray-500 leading-8 mb-6">
+                    Nach meiner Ausbildung zum Elektroniker für Energie- und Gebäudetechnik habe ich zwischen 2018 und 2019 die Weiterbildung zum Elektrotechnikermeister, heute Bachelor Professional, erfolgreich absolviert.
+                </p>
+
+                <p class="text-gray-500 leading-8">
+                    Mit insgesamt über 13 Jahren Erfahrung verbinde ich handwerkliche Praxis, meisterliche Qualifikation und moderne Gebäudetechnik – von klassischer Elektroinstallation bis hin zu Smart Home und KNX-Gebäudeautomation.
+                </p>
+            </div>
+
+            <div class="reveal delay-2">
+                <div class="bg-dark rounded-[2.5rem] p-10 md:p-12 text-white shadow-2xl shadow-black/20 border border-gold/30">
+                    <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase">Qualifikation</span>
+
+                    <h3 class="font-condensed text-4xl font-extrabold uppercase italic mt-4 mb-8">
+                        Elektrotechnikermeister<br>
+                        <span class="text-gold">Bachelor Professional</span>
+                    </h3>
+
+                    <div class="space-y-6">
+                        <div class="flex gap-5">
+                            <div class="text-gold font-condensed text-3xl font-extrabold">13+</div>
+                            <div>
+                                <h4 class="font-bold uppercase tracking-wide text-sm mb-1">Jahre Erfahrung</h4>
+                                <p class="text-gray-400 text-sm leading-6">Praxis in Energie- und Gebäudetechnik, Installation, Planung und modernen Gebäudesystemen.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-5">
+                            <div class="text-gold font-condensed text-3xl font-extrabold">2018</div>
+                            <div>
+                                <h4 class="font-bold uppercase tracking-wide text-sm mb-1">Meisterweiterbildung</h4>
+                                <p class="text-gray-400 text-sm leading-6">Weiterbildung zum Elektrotechnikermeister / Bachelor Professional im Zeitraum 2018 bis 2019.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-5">
+                            <div class="text-gold font-condensed text-3xl font-extrabold">KNX</div>
+                            <div>
+                                <h4 class="font-bold uppercase tracking-wide text-sm mb-1">Gebäudeautomation</h4>
+                                <p class="text-gray-400 text-sm leading-6">Spezialisierung auf intelligente Steuerung, Smart Home und moderne Elektrolösungen.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+    <section id="kontakt" class="py-24 bg-gray-50">
+        <div class="container mx-auto px-6 max-w-5xl">
+            <div class="bg-white rounded-[3rem] shadow-2xl overflow-hidden grid md:grid-cols-2">
+                <div class="bg-dark p-12 text-white">
+                    <h2 class="font-condensed text-4xl font-extrabold mb-8 uppercase italic text-gold">Starten wir Ihr Projekt.</h2>
+                    <div class="space-y-6">
+                        <p class="flex items-center gap-4 text-gray-300">
+                            <span class="text-gold">📍</span> Süntelstraße 55, 31785 Hameln
+                        </p>
+                        <p class="flex items-center gap-4 text-gray-300 font-bold">
+                            <span class="text-gold">📞</span> +49 160 96777 430
+                        </p>
+                        <p class="flex items-center gap-4 text-gray-300">
+                            <span class="text-gold">✉️</span> info@btelektrotechnik.net
+                        </p>
+                    </div>
+                </div>
+                <div class="p-12">
+                    <form action="https://formspree.io/f/xnjwloko" method="POST" class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Ihr Name</label>
+                            <input type="text" name="name" required class="w-full bg-gray-50 border-b border-gray-200 py-3 focus:border-gold outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">E-Mail Adresse</label>
+                            <input type="email" name="email" required class="w-full bg-gray-50 border-b border-gray-200 py-3 focus:border-gold outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Nachricht</label>
+                            <textarea name="message" rows="4" required class="w-full bg-gray-50 border-b border-gray-200 py-3 focus:border-gold outline-none transition-colors resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-dark text-white py-4 rounded-xl font-bold uppercase text-xs tracking-[0.2em] hover:bg-gold transition-all">Nachricht senden</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark py-12 text-center text-gray-500 text-[10px] uppercase tracking-widest border-t border-white/5">
+        <div>
+            <p>&copy; 2026 BT Elektrotechnik Hameln. Inhaber Tarik Bozüslü.</p>
+            <div>
+            <a href="./impressum.html" class="hover:text-gold transition-colors">Impressum</a>
+            <a href="./datenschutz.html" class="hover:text-gold transition-colors">Datenschutz</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./script.js?v=5" defer></script>
+
+    <!-- COOKIE / PRIVACY NOTICE -->
+    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite">
+    <div class="cookie-content">
+        <div>
+            <h3>Datenschutzeinstellungen</h3>
+            <p>
+                Wir verwenden notwendige Funktionen für den Betrieb der Website. Optional kann die Seite speichern,
+                dass die Intro-Animation bereits angezeigt wurde.
+            </p>
+        </div>
+
+        <div class="cookie-actions">
+            <a href="./datenschutz.html" class="cookie-link">Datenschutz</a>
+            <button type="button" id="cookie-necessary">Nur notwendige</button>
+            <button type="button" id="cookie-comfort">Komfort erlauben</button>
+        </div>
+    </div>
+    </div>
+    
+</body>
+</html>
