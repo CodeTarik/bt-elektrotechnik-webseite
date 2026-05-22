@@ -3,6 +3,13 @@ a,
     cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='%23F5A623' stroke='%231C1C1C' stroke-width='1.2' d='M13 2L3 14h8l-1 8 11-13h-8l1-7z'/%3E%3C/svg%3E") 8 2, pointer;
     }
 
+    html.overlay-open,
+    body.overlay-open {
+    overflow: hidden;
+    height: 100%;
+    }
+
+
     .hero-gradient { background: linear-gradient(to bottom right, #1C1C1C 0%, #2a2a2a 100%); }
 
     .services-bg {
@@ -367,6 +374,28 @@ a,
     grid-template-columns: 1.25fr 1.1fr 0.9fr;
     grid-template-rows: 1fr 1fr;
     gap: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 166, 35, 0.55) rgba(255, 255, 255, 0.06);
+}
+
+.panel-dashboard::-webkit-scrollbar {
+    width: 6px;
+}
+
+.panel-dashboard::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+}
+
+.panel-dashboard::-webkit-scrollbar-thumb {
+    background: rgba(245, 166, 35, 0.55);
+    border-radius: 999px;
+}
+
+.panel-dashboard::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 166, 35, 0.85);
 }
 
 .dashboard-clock-card,

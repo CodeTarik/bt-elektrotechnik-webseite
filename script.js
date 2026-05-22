@@ -12,6 +12,36 @@ const cookieComfortButton = document.getElementById('cookie-comfort');
 const privacyChoice = localStorage.getItem(COOKIE_STORAGE_KEY);
 const comfortAllowed = privacyChoice === 'comfort';
 
+const panelCurrentTime = document.getElementById('panel-current-time');
+
+const lockPageScroll = () => {
+    document.documentElement.classList.add('overlay-open');
+    document.body.classList.add('overlay-open');
+};
+
+const unlockPageScroll = () => {
+    document.documentElement.classList.remove('overlay-open');
+    document.body.classList.remove('overlay-open');
+};
+
+const updatePanelTime = () => {
+    if (!panelCurrentTime) return;
+
+    const now = new Date();
+
+    panelCurrentTime.textContent = now.toLocaleTimeString('de-DE', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
+
+updatePanelTime();
+setInterval(updatePanelTime, 1000);
+
+if (lightOverlay) {
+    lockPageScroll();
+}
+
 /* Cookie-Banner anzeigen, solange keine Auswahl getroffen wurde */
 if (!privacyChoice && cookieBanner) {
     cookieBanner.classList.add('is-visible');
@@ -42,6 +72,7 @@ if (cookieComfortButton) {
 if (comfortAllowed && sessionStorage.getItem(INTRO_STORAGE_KEY) === 'true') {
     if (lightOverlay) {
         lightOverlay.style.display = 'none';
+        unlockPageScroll();
     }
 }
 
@@ -65,6 +96,7 @@ if (lightOverlay) {
 
         setTimeout(() => {
             lightOverlay.style.display = 'none';
+            unlockPageScroll();
         }, 2250);
     };
 
