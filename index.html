@@ -37,138 +37,176 @@
 <body class="bg-white font-sans text-dark leading-relaxed">
 
    
- <!-- SMART BUILDING INTRO OVERLAY -->
-<div id="light-overlay" class="smart-overlay">
-    <div class="smart-bg-grid" aria-hidden="true"></div>
-    <div class="smart-bg-glow" aria-hidden="true"></div>
+<!-- KNX VISUALIZATION PANEL INTRO OVERLAY -->
+<div id="light-overlay" class="panel-overlay">
+    <div class="panel-overlay-grid" aria-hidden="true"></div>
+    <div class="panel-overlay-glow" aria-hidden="true"></div>
 
-    <div class="smart-intro-inner">
+    <div class="panel-intro-inner">
 
-        <div class="smart-intro-left">
+        <div class="panel-intro-text">
             <div class="intro-step">Gebäudeautomation / KNX</div>
 
             <h2>
-                Gebäude<br>
-                intelligent<br>
-                steuern.
+                Moderne<br>
+                Elektrotechnik<br>
+                erleben.
             </h2>
 
             <p>
-                Licht, Beschattung, Heizung, Sicherheit und Energie werden zu einem vernetzten System.
+                Willkommen bei BT Elektrotechnik. Entdecken Sie fachgerechte Elektroinstallation,
+                intelligente Gebäudeautomation und moderne Lösungen für Ihr Projekt.
             </p>
 
-            <div class="smart-start" id="pull-start-button" role="button" tabindex="0" aria-label="Gebäudeautomation starten">
-                <div class="smart-start-pulse"></div>
-
-                <div class="smart-start-icon" aria-hidden="true">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-                <strong>System starten</strong>
+            <div class="panel-start-button" id="pull-start-button" role="button" tabindex="0" aria-label="Website öffnen">
+                <span></span>
+                <strong>Website öffnen</strong>
             </div>
         </div>
 
-        <div class="smart-intro-stage">
-            <div class="smart-control-system" id="light-switch" aria-label="Gebäudeautomation aktivieren" role="button" tabindex="0">
+        <div class="panel-stage">
+            <div class="visual-panel-system" id="light-switch" role="button" tabindex="0" aria-label="Website starten">
 
-                <div class="smart-panel">
-                    <div class="panel-topbar">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
+                <div class="visual-panel-device">
 
-                    <div class="panel-content">
-                        <div class="panel-label">BT ELEKTROTECHNIK</div>
-
-                        <div class="knx-core">
-                            <div class="knx-ring ring-one"></div>
-                            <div class="knx-ring ring-two"></div>
-                            <div class="knx-ring ring-three"></div>
-
-                            <div class="knx-chip">
-                                <strong>KNX</strong>
-                                <small>BUS</small>
-                            </div>
+                    <div class="visual-panel-topbar">
+                        <div class="panel-top-left">
+                            <span>BT ELEKTROTECHNIK</span>
                         </div>
 
-                        <div class="panel-status-grid">
-                            <div>
-                                <span>Licht</span>
-                                <strong>Bereit</strong>
+                        <div class="panel-top-center">
+                            <span>Gebäudeautomation aktiv</span>
+                        </div>
+
+                        <div class="panel-top-right">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <div class="visual-panel-screen">
+
+                        <aside class="panel-sidebar">
+                            <div class="sidebar-item active">
+                                <span></span>
+                                Home
                             </div>
 
-                            <div>
+                            <div class="sidebar-item">
+                                <span></span>
+                                Licht
+                            </div>
+
+                            <div class="sidebar-item">
+                                <span></span>
+                                Klima
+                            </div>
+
+                            <div class="sidebar-item">
+                                <span></span>
+                                Energie
+                            </div>
+                        </aside>
+
+                        <main class="panel-dashboard">
+
+                            <section class="dashboard-clock-card">
+                                <div class="clock-ring">
+                                    <div class="clock-inner">
+                                        <strong>10:28</strong>
+                                        <small>System bereit</small>
+                                    </div>
+                                </div>
+
+                                <div class="clock-data">
+                                    <span>Raumtemperatur</span>
+                                    <strong>22.5 °C</strong>
+                                    <small>Automatikbetrieb</small>
+                                </div>
+                            </section>
+
+                            <section class="dashboard-main-card">
+                                <div class="dashboard-card-head">
+                                    <div>
+                                        <span>Smart Building</span>
+                                        <strong>Gebäudesteuerung</strong>
+                                    </div>
+                                    <small>KNX</small>
+                                </div>
+
+                                <div class="dashboard-status-list">
+                                    <div>
+                                        <span>Licht</span>
+                                        <strong>Szene Wohnen aktiv</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Beschattung</span>
+                                        <strong>Automatik bereit</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Klima</span>
+                                        <strong>Komfortbetrieb</strong>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="dashboard-tile">
+                                <span>Lichtsteuerung</span>
+                                <strong>78%</strong>
+                                <small>Dimmwert</small>
+                            </section>
+
+                            <section class="dashboard-tile">
                                 <span>Beschattung</span>
-                                <strong>Standby</strong>
-                            </div>
-
-                            <div>
-                                <span>Klima</span>
                                 <strong>Auto</strong>
-                            </div>
+                                <small>Raffstore</small>
+                            </section>
 
-                            <div>
+                            <section class="dashboard-tile">
                                 <span>Energie</span>
                                 <strong>Optimiert</strong>
-                            </div>
-                        </div>
+                                <small>Monitoring</small>
+                            </section>
+
+                            <section class="dashboard-climate-card">
+                                <div>
+                                    <span>Raumklima</span>
+                                    <strong>21.8 °C</strong>
+                                </div>
+
+                                <div class="climate-control">
+                                    <button type="button">−</button>
+                                    <span>22.0</span>
+                                    <button type="button">+</button>
+                                </div>
+                            </section>
+
+                        </main>
+
                     </div>
                 </div>
 
-                <div class="smart-line line-light"></div>
-                <div class="smart-line line-shading"></div>
-                <div class="smart-line line-climate"></div>
-                <div class="smart-line line-energy"></div>
-
-                <div class="smart-node node-light">
-                    <span></span>
-                    <strong>Licht</strong>
-                    <small>Szenen</small>
-                </div>
-
-                <div class="smart-node node-shading">
-                    <span></span>
-                    <strong>Beschattung</strong>
-                    <small>Raffstore</small>
-                </div>
-
-                <div class="smart-node node-climate">
-                    <span></span>
-                    <strong>Klima</strong>
-                    <small>Heizung</small>
-                </div>
-
-                <div class="smart-node node-energy">
-                    <span></span>
-                    <strong>Energie</strong>
-                    <small>Monitoring</small>
-                </div>
-
-                <div class="smart-brand">
-                    <strong>BT</strong>
-                    <span>Elektrotechnik</span>
-                    <small>Smart Building. Sauber geplant.</small>
-                </div>
+                <div class="panel-reflection"></div>
             </div>
         </div>
 
-        <div class="smart-intro-right">
-            <div class="smart-data-card">
-                <span>Status</span>
-                <strong>System bereit</strong>
+        <div class="panel-intro-side">
+            <div class="panel-side-card">
+                <span>Fachgebiet</span>
+                <strong>Elektroinstallation</strong>
             </div>
 
-            <div class="smart-data-card">
-                <span>Technik</span>
+            <div class="panel-side-card">
+                <span>Automation</span>
                 <strong>KNX / Smart Home</strong>
             </div>
 
-            <div class="smart-data-card">
-                <span>Fokus</span>
-                <strong>Komfort. Effizienz. Kontrolle.</strong>
+            <div class="panel-side-card">
+                <span>Anspruch</span>
+                <strong>Sauber. Sicher. Zukunftsfähig.</strong>
             </div>
         </div>
 
@@ -520,7 +558,7 @@
         </div>
     </footer>
 
-    <script src="./script.js?v=6" defer></script>
+    <script src="./script.js?v=7" defer></script>
 
     <!-- COOKIE / PRIVACY NOTICE -->
     <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite">

@@ -1,5 +1,5 @@
 const COOKIE_STORAGE_KEY = 'btPrivacyChoice';
-const INTRO_STORAGE_KEY = 'lightIsOn';
+const INTRO_STORAGE_KEY = 'btPanelIntroSeen';
 
 const lightOverlay = document.getElementById('light-overlay');
 const lightSwitch = document.getElementById('light-switch');
@@ -12,8 +12,7 @@ const cookieComfortButton = document.getElementById('cookie-comfort');
 const privacyChoice = localStorage.getItem(COOKIE_STORAGE_KEY);
 const comfortAllowed = privacyChoice === 'comfort';
 
-const lampWirePath = document.querySelector('.lamp-wire-path');
-
+/* Cookie-Banner anzeigen, solange keine Auswahl getroffen wurde */
 if (!privacyChoice && cookieBanner) {
     cookieBanner.classList.add('is-visible');
 }
@@ -46,37 +45,15 @@ if (comfortAllowed && sessionStorage.getItem(INTRO_STORAGE_KEY) === 'true') {
     }
 }
 
-if (lightSwitch && lightOverlay) {
+/* KNX / Visualisierungspanel Intro */
+if (lightOverlay) {
     let isAnimating = false;
 
-
-    function animateLampWire() {
-    if (!lampWirePath) return;
-
-    const frames = [
-        'M60 0 C60 90 60 180 60 330',
-        'M60 0 C70 95 82 190 74 330',
-        'M60 0 C50 95 38 190 46 330',
-        'M60 0 C66 92 72 186 68 330',
-        'M60 0 C56 92 50 186 54 330',
-        'M60 0 C60 90 60 180 60 330'
-    ];
-
-    const timings = [0, 170, 340, 520, 700, 900];
-
-    frames.forEach((d, index) => {
-        setTimeout(() => {
-            lampWirePath.setAttribute('d', d);
-        }, timings[index]);
-    });
-}
-
-    const triggerLightIntro = () => {
+    const triggerPanelIntro = () => {
         if (isAnimating) return;
         isAnimating = true;
 
         lightOverlay.classList.add('active-animation');
-        animateLampWire();                                              //am 20.05.2026 eingefügt
 
         if (localStorage.getItem(COOKIE_STORAGE_KEY) === 'comfort') {
             sessionStorage.setItem(INTRO_STORAGE_KEY, 'true');
@@ -84,25 +61,34 @@ if (lightSwitch && lightOverlay) {
 
         setTimeout(() => {
             lightOverlay.classList.add('light-on');
-        }, 1450);
+        }, 1300);
 
         setTimeout(() => {
             lightOverlay.style.display = 'none';
-        }, 2450);
+        }, 2250);
     };
 
-    lightSwitch.addEventListener('click', triggerLightIntro);
+    if (lightSwitch) {
+        lightSwitch.addEventListener('click', triggerPanelIntro);
 
-    if (pullStartButton) {
-        pullStartButton.addEventListener('click', triggerLightIntro);
+        lightSwitch.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                triggerPanelIntro();
+            }
+        });
     }
 
-    lightSwitch.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            triggerLightIntro();
-        }
-    });
+    if (pullStartButton) {
+        pullStartButton.addEventListener('click', triggerPanelIntro);
+
+        pullStartButton.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                triggerPanelIntro();
+            }
+        });
+    }
 }
 
 /* Reveal Animation */
