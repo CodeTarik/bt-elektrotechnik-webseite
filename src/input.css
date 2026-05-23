@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@source "../index.html";
+@source "../impressum.html";
+@source "../datenschutz.html";
+
+@theme {
+    --color-gold: #F5A623;
+    --color-dark: #1C1C1C;
+    --font-sans: Arial, Helvetica, sans-serif;
+    --font-condensed: "Arial Narrow", Arial, Helvetica, sans-serif;
+}
