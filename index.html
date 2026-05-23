@@ -8,7 +8,7 @@
     
     <link rel="icon" type="image/png" href="./images/netzstecker.png">
     <link rel="stylesheet" href="./dist/tailwind.css?v=1">
-    <link rel="stylesheet" href="./style.css?v=8">
+    <link rel="stylesheet" href="./style.css?v=9">
 
 
 </head>
@@ -177,21 +177,18 @@
 </div>
     
 
-    <nav class="fixed w-full z-50 bg-[#2A2A2A]/95 backdrop-blur-md border-b border-white/10 py-4">
-        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <a href="#" class="flex items-center justify-center md:justify-start gap-3">
-                <img src="./images/bt-logo-transparent-navbar.png" alt="BT Elektrotechnik Logo" class="w-20 h-10">
-                <!-- <div class="text-white font-condensed text-2xl font-bold tracking-tighter">
-                    BT <span class="text-gold">ELEKTROTECHNIK</span>
-                </div> -->
-            </a>
+    <nav class="site-navbar">
+    <div class="site-navbar-inner">
+        <a href="#" class="site-navbar-logo" aria-label="BT Elektrotechnik Startseite">
+            <img src="./images/btlogo.transparent.stecker.png" alt="BT Elektrotechnik Logo">
+        </a>
 
-            <div class="flex items-center justify-center gap-8 md:gap-10 text-white/80 text-sm font-semibold uppercase tracking-wider">
-                <a href="#leistungen" class="hover:text-gold transition-colors">Leistungen</a>
-                <a href="#ueber-uns" class="hover:text-gold transition-colors">Über uns</a>
-                <a href="#kontakt" class="hover:text-gold transition-colors">Kontakt</a>
-            </div>
+        <div class="site-navbar-links">
+            <a href="#leistungen">Leistungen</a>
+            <a href="#ueber-uns">Über uns</a>
+            <a href="#kontakt">Kontakt</a>
         </div>
+    </div>
     </nav>
 
     <section class="relative min-h-screen flex items-center hero-gradient text-white pt-20">
