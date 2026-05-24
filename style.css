@@ -604,6 +604,15 @@ a,
     border: 1px solid rgba(255,255,255,0.10);
 }
 
+.clock-inner em {
+    display: block;
+    color: rgba(245, 166, 35, 0.82);
+    font-size: 0.58rem;
+    font-style: normal;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
 .clock-inner strong {
     display: block;
     font-size: 1.75rem;

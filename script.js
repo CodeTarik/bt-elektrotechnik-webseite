@@ -13,6 +13,7 @@ const privacyChoice = localStorage.getItem(COOKIE_STORAGE_KEY);
 const comfortAllowed = privacyChoice === 'comfort';
 
 const panelCurrentTime = document.getElementById('panel-current-time');
+const panelCurrentDate = document.getElementById('panel-current-date');
 
 const lockPageScroll = () => {
     document.documentElement.classList.add('overlay-open');
@@ -25,15 +26,24 @@ const unlockPageScroll = () => {
 };
 
 const updatePanelTime = () => {
-    if (!panelCurrentTime) return;
-
     const now = new Date();
 
-    panelCurrentTime.textContent = now.toLocaleTimeString('de-DE', {
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+    if (panelCurrentTime) {
+        panelCurrentTime.textContent = now.toLocaleTimeString('de-DE', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    if (panelCurrentDate) {
+        panelCurrentDate.textContent = now.toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    }
 };
+
 
 updatePanelTime();
 setInterval(updatePanelTime, 1000);
