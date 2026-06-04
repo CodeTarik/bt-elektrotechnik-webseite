@@ -2,63 +2,13 @@
 <html lang="de" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BT Elektrotechnik | Elektroinstallation & Smart Home Hameln</title>
     <meta name="description" content="BT Elektrotechnik in Hameln – Ihr Spezialist für Elektroinstallation, Gebäudeautomation und E-Mobility.">
-    <link rel="canonical" href="https://btelektrotechnik.net">
-
-    <!-- Open Graph / Social Sharing -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://btelektrotechnik.net">
-    <meta property="og:title" content="BT Elektrotechnik | Elektroinstallation & Smart Home Hameln">
-    <meta property="og:description" content="Ihr Meisterbetrieb für Elektroinstallation, KNX-Gebäudeautomation und E-Mobility in Hameln und Umgebung.">
-    <meta property="og:image" content="https://btelektrotechnik.net/images/bt_elektrotechnik_logo_final.png">
-    <meta property="og:locale" content="de_DE">
-    <meta property="og:site_name" content="BT Elektrotechnik">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="BT Elektrotechnik | Hameln">
-    <meta name="twitter:description" content="Meisterbetrieb für Elektroinstallation, KNX Smart Home & E-Mobility.">
-    <meta name="twitter:image" content="https://btelektrotechnik.net/images/bt_elektrotechnik_logo_final.png">
-
-    <!-- Structured Data: LocalBusiness -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ElectricalContractor",
-      "name": "BT Elektrotechnik",
-      "description": "Meisterbetrieb für Elektroinstallation, KNX-Gebäudeautomation und E-Mobility in Hameln.",
-      "url": "https://btelektrotechnik.net",
-      "telephone": "+49-160-96777430",
-      "email": "info@btelektrotechnik.net",
-      "image": "https://btelektrotechnik.net/images/bt_elektrotechnik_logo_final.png",
-      "priceRange": "€€",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Süntelstraße 55",
-        "addressLocality": "Hameln",
-        "postalCode": "31785",
-        "addressCountry": "DE"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 52.1077,
-        "longitude": 9.3562
-      },
-      "areaServed": {
-        "@type": "GeoCircle",
-        "geoMidpoint": {
-          "@type": "GeoCoordinates",
-          "latitude": 52.1077,
-          "longitude": 9.3562
-        },
-        "geoRadius": "50000"
-      }
-    }
-    </script>
-
+    
     <link rel="icon" type="image/png" href="./images/netzstecker.png">
     <link rel="stylesheet" href="./dist/tailwind.css?v=1">
-    <link rel="stylesheet" href="./style.css?v=14">
+    <link rel="stylesheet" href="./style.css?v=12">
 
 
 </head>
@@ -229,19 +179,10 @@
 
 
     </div>
-    <!-- Mobile-only Start Button (sichtbar nur auf kleinen Screens) -->
-    <div class="overlay-mobile-cta" id="overlay-mobile-cta">
-        <button type="button" id="pull-start-mobile" aria-label="Website öffnen">
-            <span class="overlay-mobile-cta-dot"></span>
-            Website öffnen
-        </button>
-        <p>Auf das Panel tippen oder den Button drücken</p>
-    </div>
-
     <div class="overlay-system-note">
         <span></span>
         System bereit · Website starten
-    </div>
+     </div>
 </div>
     
 
@@ -251,17 +192,11 @@
             <img src="./images/bt_elektrotechnik_logo_final.png" alt="BT Elektrotechnik Logo">
         </a>
 
-        <div class="site-navbar-links" id="nav-links">
+        <div class="site-navbar-links">
             <a href="#leistungen">Leistungen</a>
             <a href="#ueber-uns">Über uns</a>
             <a href="#kontakt">Kontakt</a>
         </div>
-
-        <button class="nav-toggle" id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
     </div>
     </nav>
 
@@ -285,7 +220,7 @@
             </div>
             <div class="hidden md:block relative">
                 <div class="absolute -inset-4 border border-gold/30 rounded-2xl"></div>
-                <img src="./images/btelektr.titel.png" alt="Elektrotechnik" loading="lazy" class="rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition-all duration-700">
+                <img src="./images/btelektr.titel.png" alt="Elektrotechnik" class="rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition-all duration-700">
             </div>
         </div>
     </section>
@@ -562,7 +497,7 @@
                     </div>
                 </div>
                 <div class="p-12">
-                    <form id="contact-form" action="https://formspree.io/f/xnjwloko" method="POST" class="space-y-4">
+                    <form action="https://formspree.io/f/xnjwloko" method="POST" class="space-y-4">
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Ihr Name</label>
                             <input type="text" name="name" required class="w-full bg-gray-50 border-b border-gray-200 py-3 focus:border-gold outline-none transition-colors">
@@ -575,13 +510,7 @@
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Nachricht</label>
                             <textarea name="message" rows="4" required class="w-full bg-gray-50 border-b border-gray-200 py-3 focus:border-gold outline-none transition-colors resize-none"></textarea>
                         </div>
-                        <button type="submit" id="contact-submit" class="w-full bg-dark text-white py-4 rounded-xl font-bold uppercase text-xs tracking-[0.2em] hover:bg-gold transition-all">Nachricht senden</button>
-                        <div id="form-success" class="hidden text-center py-4 text-sm font-bold text-green-600 bg-green-50 rounded-xl">
-                            ✓ Nachricht gesendet – wir melden uns bald!
-                        </div>
-                        <div id="form-error" class="hidden text-center py-4 text-sm font-bold text-red-600 bg-red-50 rounded-xl">
-                            ✕ Fehler beim Senden – bitte versuchen Sie es erneut.
-                        </div>
+                        <button type="submit" class="w-full bg-dark text-white py-4 rounded-xl font-bold uppercase text-xs tracking-[0.2em] hover:bg-gold transition-all">Nachricht senden</button>
                     </form>
                 </div>
             </div>
@@ -591,9 +520,8 @@
     <footer class="bg-dark py-12 text-center text-gray-500 text-[10px] uppercase tracking-widest border-t border-white/5">
         <div>
             <p>&copy; 2026 BT Elektrotechnik Hameln. Inhaber Tarik Bozüslü.</p>
-            <div class="flex items-center justify-center gap-6 mt-3">
+            <div>
             <a href="./impressum.html" class="hover:text-gold transition-colors">Impressum</a>
-            <span aria-hidden="true">·</span>
             <a href="./datenschutz.html" class="hover:text-gold transition-colors">Datenschutz</a>
             </div>
         </div>
