@@ -92,131 +92,136 @@ if (container) {
     makeSkirt(ROOM_D, -ROOM_W/2 + 0.008, 0.04, 0, Math.PI/2);
     makeSkirt(ROOM_D,  ROOM_W/2 - 0.008, 0.04, 0, Math.PI/2);
 
-    // ─── 2b) Unterverteilung an der linken Wand ───
-    // Wandschrank-Geometrie als geschlossene Gruppe.
-    // Tür ist eigene Sub-Gruppe mit Drehpunkt am Scharnier (für Schritt 7).
+    // ─── 2b) Unterverteilung an der linken Wand (Hager-Design) ───
     function buildUnterverteilung() {
         const uv = new THREE.Group();
 
-        // Maße in Metern (typische 4-reihige Aufputz-Unterverteilung)
-        const W = 0.12;     // Tiefe (X, in den Raum)
-        const H = 0.78;     // Höhe (Y) - 4 Reihen DIN-Schiene
-        const D = 0.55;     // Breite an der Wand (Z) - ca. 12 TE
-        const FRAME = 0.025; // Rahmenbreite
+        // Exakte Hager-Maße (z.B.univers Z Aufputz-Schrank, ca. 5 Reihen/2-feldig)
+        const W = 0.16;      // Tiefe (X, steht von der Wand ab)
+        const H = 0.95;      // Höhe (Y)
+        const D = 0.55;      // Breite (Z)
+        const FRAME_W = 0.015; // Filigraner Hager-Stahlblechrahmen
 
-        // Materialien
-        const bodyMat   = new THREE.MeshStandardMaterial({
-            color: 0xe8e3d8, roughness: 0.55, metalness: 0.05
-        });
-        const doorMat   = new THREE.MeshStandardMaterial({
-            color: 0xf2eee5, roughness: 0.4, metalness: 0.08
-        });
-        const trimMat   = new THREE.MeshStandardMaterial({
-            color: 0x2a2620, roughness: 0.5, metalness: 0.4
-        });
-        const metalMat  = new THREE.MeshStandardMaterial({
-            color: 0x888888, roughness: 0.25, metalness: 0.9
-        });
-        const handleMat = new THREE.MeshStandardMaterial({
-            color: 0x3a3a3a, roughness: 0.35, metalness: 0.8
+        // 🌟 1. Texturen laden für echten Fotorealismus
+        const textureLoader = new THREE.TextureLoader();
+        
+        // Nutze hier ein echtes, hochauflösendes Foto von einem Hager-Innenleben, 
+        // das du sauber zugeschnitten hast (RCDs, MID-Zähler, PV-Manager)
+        const innenlebenTex = textureLoader.load('./images/hager_innenleben_pro.jpg');
+        innenlebenTex.colorSpace = THREE.SRGBColorSpace;
+
+        // Typische Hager-Pulverbeschichtung (Verkehrsweiß Matt RAL 9016)
+        const hagerWeissMat = new THREE.MeshStandardMaterial({
+            color: 0xfafafa, 
+            roughness: 0.42, // Erzeugt den typischen seidenmatten Blech-Reflex
+            metalness: 0.15
         });
 
-        // Korpus (Body)
-        const body = new THREE.Mesh(new THREE.BoxGeometry(W, H, D), bodyMat);
-        body.castShadow = true;
-        body.receiveShadow = true;
-        uv.add(body);
+        const hagerAnthrazit = new THREE.MeshStandardMaterial({
+            color: 0x2b2c2c,
+            roughness: 0.5,
+            metalness: 0.2
+        });
 
-        // Dunkler Rahmen am Vorderface (vier Leisten)
-        const frameDepth = 0.008;
-        const frameX = W/2 + frameDepth/2;
-        const ft = new THREE.Mesh(new THREE.BoxGeometry(frameDepth, FRAME, D), trimMat);
-        ft.position.set(frameX,  H/2 - FRAME/2, 0); uv.add(ft);
-        const fb = ft.clone();
-        fb.position.y = -H/2 + FRAME/2; uv.add(fb);
-        const fl = new THREE.Mesh(new THREE.BoxGeometry(frameDepth, H - 2*FRAME, FRAME), trimMat);
-        fl.position.set(frameX, 0, -D/2 + FRAME/2); uv.add(fl);
-        const fr = fl.clone();
-        fr.position.z = D/2 - FRAME/2; uv.add(fr);
+        const metallGlanz = new THREE.MeshStandardMaterial({
+            color: 0xcccccc,
+            roughness: 0.2,
+            metalness: 0.8
+        });
 
-        // ── TÜR-GRUPPE mit Drehpunkt am Scharnier (rechte Seite aus Kamerasicht) ──
-        // Scharnier sitzt auf +Z Seite des Schranks (das ist Kamera-LINKS, weil die
-        // Kamera aus +Z-Richtung schaut). Beim Öffnen schwenkt die Tür um diesen
-        // Drehpunkt nach +X (in den Raum hinein).
+        // Korpus (Hintere Schale an der Wand)
+        const korpus = new THREE.Mesh(new THREE.BoxGeometry(W - 0.01, H - 0.01, D - 0.01), hagerWeissMat);
+        korpus.position.x = -(0.01 / 2);
+        korpus.castShadow = true;
+        korpus.receiveShadow = true;
+        uv.add(korpus);
+
+        // 🌟 2. Das Innenleben (Wird sichtbar, wenn die Tür aufgeht)
+        // Wir bauen eine Vertiefung ein, in der die fotorealistische Textur sitzt
+        const innenlebenGruppe = new THREE.Group();
+        innenlebenGruppe.position.x = W / 2 - 0.02; // Leicht versenkt im Schrank
+        uv.add(innenlebenGruppe);
+
+        // Die fotorealistische Trägerplatte für die Schutzorgane
+        const verteilerFeld = new THREE.Mesh(
+            new THREE.PlaneGeometry(D - 0.04, H - 0.04),
+            new THREE.MeshStandardMaterial({ 
+                map: innenlebenTex,
+                roughness: 0.5,
+                metalness: 0.1
+            })
+        );
+        verteilerFeld.rotation.y = Math.PI / 2; // Ausrichtung in den Raum hinein
+        verteilerFeld.receiveShadow = true;
+        innenlebenGruppe.add(verteilerFeld);
+
+        // 🌟 3. Der charakteristische Hager-Frontrahmen (Kantiges Design)
+        const rahmenDicke = 0.012;
+        const rahmenX = W / 2 + rahmenDicke / 2;
+        
+        const rfTop = new THREE.Mesh(new THREE.BoxGeometry(rahmenDicke, FRAME_W, D), hagerWeissMat);
+        rfTop.position.set(rahmenX, H / 2 - FRAME_W / 2, 0); uv.add(rfTop);
+        
+        const rfBot = rfTop.clone();
+        rfBot.position.y = -H / 2 + FRAME_W / 2; uv.add(rfBot);
+        
+        const rfLeft = new THREE.Mesh(new THREE.BoxGeometry(rahmenDicke, H - 2 * FRAME_W, FRAME_W), hagerWeissMat);
+        rfLeft.position.set(rahmenX, 0, -D / 2 + FRAME_W / 2); uv.add(rfLeft);
+        
+        const rfRight = rfLeft.clone();
+        rfRight.position.z = D / 2 - FRAME_W / 2; uv.add(rfRight);
+
+        // 🌟 4. TÜR-GRUPPE (Exakter Hager-Look, kantig und flach)
         const doorGroup = new THREE.Group();
-        doorGroup.position.set(frameX + frameDepth/2, 0, D/2 - FRAME);
+        // Drehpunkt exakt auf der Scharnierseite (Kamera-Links / Wand-Inneseite)
+        doorGroup.position.set(rahmenX + rahmenDicke / 2, 0, D / 2 - FRAME_W);
         uv.add(doorGroup);
 
-        // Türplatte (offset in -Z Richtung, damit Scharnier-Kante an doorGroup-Origin liegt)
-        const doorPanelD = D - 2*FRAME - 0.005;
+        const doorW = D - 2 * FRAME_W - 0.002;
         const door = new THREE.Mesh(
-            new THREE.BoxGeometry(0.008, H - 2*FRAME - 0.005, doorPanelD),
-            doorMat
+            new THREE.BoxGeometry(0.006, H - 2 * FRAME_W - 0.002, doorW),
+            hagerWeissMat
         );
-        door.position.z = -doorPanelD / 2;
+        door.position.z = -doorW / 2;
         door.castShadow = true;
         doorGroup.add(door);
 
-        // Scharniere (zwei Zylinder)
-        const hingeGeo = new THREE.CylinderGeometry(0.008, 0.008, 0.04, 12);
-        const h1 = new THREE.Mesh(hingeGeo, metalMat);
-        h1.position.set(0, H/2 - FRAME - 0.07, 0);
-        h1.rotation.x = Math.PI / 2;
-        doorGroup.add(h1);
-        const h2 = h1.clone();
-        h2.position.y = -(H/2 - FRAME - 0.07);
-        doorGroup.add(h2);
+        // 🌟 5. Der markante Hager-Verschluss (Anthrazitfarbener Klapphebel)
+        const griffGruppe = new THREE.Group();
+        griffGruppe.position.set(0.004, 0, -doorW + 0.05); // Auf Griffhöhe platziert
+        doorGroup.add(griffGruppe);
 
-        // Türgriff (am freien Ende, gegenüber dem Scharnier)
-        const handle = new THREE.Mesh(
-            new THREE.BoxGeometry(0.018, 0.07, 0.022),
-            handleMat
-        );
-        handle.position.set(0.013, 0, -doorPanelD + 0.04);
-        doorGroup.add(handle);
+        // Verschluss-Platte
+        const verschlussBasis = new THREE.Mesh(new THREE.BoxGeometry(0.005, 0.12, 0.025), hagerAnthrazit);
+        griffGruppe.add(verschlussBasis);
 
-        // Logo-Label oben auf der Tür (über CanvasTexture)
+        // Der eigentliche Hebel/Schlitzschloss-Detail
+        const hebel = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.06, 0.012), hagerAnthrazit);
+        hebel.position.x = 0.002;
+        griffGruppe.add(hebel);
+
+        // Dezent eingeprägtes Hager-Logo per kleiner CanvasTexture (optional) oder edler Beschriftung
         const cvs = document.createElement('canvas');
-        cvs.width = 256; cvs.height = 64;
+        cvs.width = 128; cvs.height = 32;
         const ctx = cvs.getContext('2d');
-        ctx.fillStyle = '#1c1612';
-        ctx.fillRect(0, 0, 256, 64);
-        ctx.fillStyle = '#F5A623';
-        ctx.font = 'bold 22px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('BT ELEKTROTECHNIK', 128, 32);
-        const labelTex = new THREE.CanvasTexture(cvs);
-        labelTex.colorSpace = THREE.SRGBColorSpace;
-
-        const label = new THREE.Mesh(
-            new THREE.PlaneGeometry(0.22, 0.055),
-            new THREE.MeshBasicMaterial({ map: labelTex })
+        ctx.fillStyle = '#fafafa';
+        ctx.fillRect(0, 0, 128, 32);
+        ctx.fillStyle = '#2b2c2c';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText('hager', 10, 20);
+        const hagerTex = new THREE.CanvasTexture(cvs);
+        
+        const brandLabel = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.06, 0.015),
+            new THREE.MeshBasicMaterial({ map: hagerTex })
         );
-        label.position.set(0.013, (H - 2*FRAME)/2 - 0.06, -doorPanelD/2);
-        label.rotation.y = Math.PI / 2;  // Plane in +X Richtung drehen
-        doorGroup.add(label);
+        brandLabel.position.set(0.0045, H / 2 - 0.06, -doorW + 0.05);
+        brandLabel.rotation.y = Math.PI / 2;
+        doorGroup.add(brandLabel);
 
-        // Status-LED (grün, leuchtet auf der Tür)
-        const led = new THREE.Mesh(
-            new THREE.SphereGeometry(0.007, 12, 12),
-            new THREE.MeshBasicMaterial({ color: 0x66ff99 })
-        );
-        led.position.set(0.013, (H - 2*FRAME)/2 - 0.13, -doorPanelD/2);
-        doorGroup.add(led);
-
-        // Sanfter Glow um die LED
-        const glow = new THREE.Mesh(
-            new THREE.SphereGeometry(0.018, 16, 16),
-            new THREE.MeshBasicMaterial({
-                color: 0x66ff99, transparent: true, opacity: 0.25
-            })
-        );
-        glow.position.copy(led.position);
-        doorGroup.add(glow);
-
-        // Referenz auf die doorGroup nach außen geben — brauchen wir in Schritt 7
+        // Referenz sichern für die spätere Klick-Animation
         uv.userData.doorGroup = doorGroup;
+        uv.userData.isOpened = false;
 
         return uv;
     }
@@ -242,6 +247,11 @@ if (container) {
     ceilLight.shadow.mapSize.set(1024, 1024);
     ceilLight.shadow.bias = -0.0005;
     scene.add(ceilLight);
+
+    // 🌟 Generiere eine prozedurale Umgebung für PBR-Reflektionen (Beseitigt den "Spiel"-Look)
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+    scene.environment = pmremGenerator.fromScene(new THREE.Scene()).texture;
 
     // Sichtbarer Lampen-Disc an der Decke
     const lampMesh = new THREE.Mesh(
@@ -336,6 +346,48 @@ if (container) {
     };
     container.addEventListener('mousedown', fadeHint);
     container.addEventListener('touchstart', fadeHint);
+
+    // ─── 5b) Klick-Interaktion für den Hager-Schrank ───
+    const raycaster = new THREE.Raycaster();
+    const mouseClick = new THREE.Vector2();
+
+    container.addEventListener('click', (e) => {
+        // Wenn der Nutzer die Kamera stark gedreht hat, war es ein Drag, kein Klick
+        if (isDragging) return; 
+
+        const rect = container.getBoundingClientRect();
+        mouseClick.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouseClick.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouseClick, camera);
+        
+        // Überprüfen, ob die Unterverteilung getroffen wurde
+        const intersects = raycaster.intersectObjects(unterverteilung.children, true);
+
+        if (intersects.length > 0) {
+            const doorG = unterverteilung.userData.doorGroup;
+            const isOpen = unterverteilung.userData.isOpened;
+
+            // Einfache, flüssige Rotations-Animation ohne externe Bibliotheken
+            let targetRotation = isOpen ? 0 : Math.PI * 0.65; // 115 Grad öffnen
+            
+            // Animation via simpler Interpolation im Render-Loop vorbereiten
+            let currentRot = doorG.rotation.y;
+            
+            const performOpenAnimation = () => {
+                let diff = targetRotation - doorG.rotation.y;
+                if (Math.abs(diff) > 0.001) {
+                    doorG.rotation.y += diff * 0.12; // Easing-Faktor
+                    requestAnimationFrame(performOpenAnimation);
+                } else {
+                    doorG.rotation.y = targetRotation;
+                }
+            };
+            
+            performOpenAnimation();
+            unterverteilung.userData.isOpened = !isOpen;
+        }
+    });
 
     // ─── 6) Sichtbarkeit + Render-Loop ───
     let isVisible   = false;
