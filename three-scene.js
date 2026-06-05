@@ -325,6 +325,92 @@ if (container) {
     potentialausgleich.rotation.y = Math.PI / 2; // Drehung, damit sie flach an der linken Wand sitzt
     scene.add(potentialausgleich);
 
+    // ─── 2d) Hausanschlusskasten (HAK) & VDE-gerechte Verkabelung ───
+    function buildHAKAndCables() {
+        const hakGroup = new THREE.Group();
+
+        // 🌟 1. Materialien für HAK und Kabel
+        const hakGehaeuseMat = new THREE.MeshStandardMaterial({ 
+            color: 0x2b2b2b, roughness: 0.75 // Typisches dunkles Industrie-Grau/Schwarz (z.B. Jean Müller)
+        });
+        const hakDeckelMat = new THREE.MeshStandardMaterial({ 
+            color: 0x333333, roughness: 0.6 
+        });
+        const nymGrau = new THREE.MeshStandardMaterial({ 
+            color: 0x7a7a7a, roughness: 0.6 // NYM-J Mantelleitung
+        });
+        const nyySchwarz = new THREE.MeshStandardMaterial({ 
+            color: 0x1a1a1a, roughness: 0.7 // NYY-J Erdkabel
+        });
+        const peGruenGelb = new THREE.MeshStandardMaterial({ 
+            color: 0x8CBF26, roughness: 0.6 // PE / Erdung
+        });
+
+        // 🌟 2. Der Hausanschlusskasten (Gehäuse)
+        const hakW = 0.14; // Tiefe in den Raum
+        const hakH = 0.38; // Höhe
+        const hakD = 0.24; // Breite an der Wand
+
+        // Basis-Gehäuse
+        const base = new THREE.Mesh(new THREE.BoxGeometry(hakW, hakH, hakD), hakGehaeuseMat);
+        base.castShadow = true;
+        base.receiveShadow = true;
+        hakGroup.add(base);
+
+        // Deckel (leicht abgesetzt, simuliert Plombierhaube)
+        const deckel = new THREE.Mesh(new THREE.BoxGeometry(0.02, hakH - 0.02, hakD - 0.02), hakDeckelMat);
+        deckel.position.x = hakW / 2 + 0.01;
+        deckel.castShadow = true;
+        hakGroup.add(deckel);
+
+        // 🌟 3. Hilfsfunktion für weiche, realistische Kabelverlegung (Splines)
+        const createCable = (points, material, radius) => {
+            const curve = new THREE.CatmullRomCurve3(points);
+            // 32 Segmente für flüssige Biegungen
+            const geometry = new THREE.TubeGeometry(curve, 32, radius, 12, false);
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.castShadow = true;
+            return mesh;
+        };
+
+        // Koordinaten-Basis (Wand links)
+        const wandX = -ROOM_W / 2 + 0.02;
+
+        // 🌟 4. Zuleitung zum Zählerschrank (Grau, z.B. 5x16mm²)
+        // Vom HAK oben (-0.1 Z) in den Zählerschrank unten (-0.4 Z)
+        const zuleitungPoints = [
+            new THREE.Vector3(wandX, 0.75, -0.1),  // Start oben aus dem HAK
+            new THREE.Vector3(wandX, 0.85, -0.1),  // Stückchen hoch
+            new THREE.Vector3(wandX, 0.95, -0.3),  // Rüberziehen Richtung UV
+            new THREE.Vector3(wandX, 1.05, -0.4)   // Rein in die Unterverteilung
+        ];
+        hakGroup.add(createCable(zuleitungPoints, nymGrau, 0.012));
+
+        // 🌟 5. Erdkabel (Schwarz, vom Boden in den HAK)
+        const erdkabelPoints = [
+            new THREE.Vector3(wandX, 0, -0.1),     // Start im Fußboden
+            new THREE.Vector3(wandX, 0.35, -0.1)   // Rein unten in den HAK
+        ];
+        hakGroup.add(createCable(erdkabelPoints, nyySchwarz, 0.015));
+
+        // 🌟 6. Potentialausgleich (Grüngelb, vom HAK zur PAS)
+        // Die PAS sitzt bei ca. Z = -0.4 und Y = 0.3
+        const pePoints = [
+            new THREE.Vector3(wandX, 0.45, -0.2),  // Start seitlich/unten am HAK
+            new THREE.Vector3(wandX, 0.38, -0.28), // Bogen nach unten
+            new THREE.Vector3(wandX, 0.32, -0.4)   // Rein in die Klemme der PAS
+        ];
+        hakGroup.add(createCable(pePoints, peGruenGelb, 0.006));
+
+        return hakGroup;
+    }
+
+    const hausanschluss = buildHAKAndCables();
+    // Positionierung: Rechte Seite neben/unter der UV
+    // Y = 0.56 (ca. 56 cm über dem Boden), Z = -0.1 (rechts von der Mitte)
+    hausanschluss.position.set(0, 0.56, 0); 
+    scene.add(hausanschluss);
+
     // ─── 3) Beleuchtung & PBR-Umgebung ───
     scene.add(new THREE.AmbientLight(0xfff4e0, 0.8));
 
