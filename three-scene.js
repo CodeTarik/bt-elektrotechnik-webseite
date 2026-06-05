@@ -19,8 +19,8 @@ if (container) {
         0.05, 50
     );
     const EYE_HEIGHT = 1.65;            // Augenhöhe (Person ca. 1,80 m groß)
-    // Startposition leicht versetzt, damit man nicht in der Raummitte „klebt"
-    camera.position.set(0.6, EYE_HEIGHT, 1.4);
+    // Startposition: nah an der linken Wand, ca. 2 m vor der Unterverteilung
+    camera.position.set(-0.4, EYE_HEIGHT, 0.7);
     camera.rotation.order = 'YXZ';
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -92,6 +92,140 @@ if (container) {
     makeSkirt(ROOM_D, -ROOM_W/2 + 0.008, 0.04, 0, Math.PI/2);
     makeSkirt(ROOM_D,  ROOM_W/2 - 0.008, 0.04, 0, Math.PI/2);
 
+    // ─── 2b) Unterverteilung an der linken Wand ───
+    // Wandschrank-Geometrie als geschlossene Gruppe.
+    // Tür ist eigene Sub-Gruppe mit Drehpunkt am Scharnier (für Schritt 7).
+    function buildUnterverteilung() {
+        const uv = new THREE.Group();
+
+        // Maße in Metern (typische 4-reihige Aufputz-Unterverteilung)
+        const W = 0.12;     // Tiefe (X, in den Raum)
+        const H = 0.78;     // Höhe (Y) - 4 Reihen DIN-Schiene
+        const D = 0.55;     // Breite an der Wand (Z) - ca. 12 TE
+        const FRAME = 0.025; // Rahmenbreite
+
+        // Materialien
+        const bodyMat   = new THREE.MeshStandardMaterial({
+            color: 0xe8e3d8, roughness: 0.55, metalness: 0.05
+        });
+        const doorMat   = new THREE.MeshStandardMaterial({
+            color: 0xf2eee5, roughness: 0.4, metalness: 0.08
+        });
+        const trimMat   = new THREE.MeshStandardMaterial({
+            color: 0x2a2620, roughness: 0.5, metalness: 0.4
+        });
+        const metalMat  = new THREE.MeshStandardMaterial({
+            color: 0x888888, roughness: 0.25, metalness: 0.9
+        });
+        const handleMat = new THREE.MeshStandardMaterial({
+            color: 0x3a3a3a, roughness: 0.35, metalness: 0.8
+        });
+
+        // Korpus (Body)
+        const body = new THREE.Mesh(new THREE.BoxGeometry(W, H, D), bodyMat);
+        body.castShadow = true;
+        body.receiveShadow = true;
+        uv.add(body);
+
+        // Dunkler Rahmen am Vorderface (vier Leisten)
+        const frameDepth = 0.008;
+        const frameX = W/2 + frameDepth/2;
+        const ft = new THREE.Mesh(new THREE.BoxGeometry(frameDepth, FRAME, D), trimMat);
+        ft.position.set(frameX,  H/2 - FRAME/2, 0); uv.add(ft);
+        const fb = ft.clone();
+        fb.position.y = -H/2 + FRAME/2; uv.add(fb);
+        const fl = new THREE.Mesh(new THREE.BoxGeometry(frameDepth, H - 2*FRAME, FRAME), trimMat);
+        fl.position.set(frameX, 0, -D/2 + FRAME/2); uv.add(fl);
+        const fr = fl.clone();
+        fr.position.z = D/2 - FRAME/2; uv.add(fr);
+
+        // ── TÜR-GRUPPE mit Drehpunkt am Scharnier (rechte Seite aus Kamerasicht) ──
+        // Scharnier sitzt auf +Z Seite des Schranks (das ist Kamera-LINKS, weil die
+        // Kamera aus +Z-Richtung schaut). Beim Öffnen schwenkt die Tür um diesen
+        // Drehpunkt nach +X (in den Raum hinein).
+        const doorGroup = new THREE.Group();
+        doorGroup.position.set(frameX + frameDepth/2, 0, D/2 - FRAME);
+        uv.add(doorGroup);
+
+        // Türplatte (offset in -Z Richtung, damit Scharnier-Kante an doorGroup-Origin liegt)
+        const doorPanelD = D - 2*FRAME - 0.005;
+        const door = new THREE.Mesh(
+            new THREE.BoxGeometry(0.008, H - 2*FRAME - 0.005, doorPanelD),
+            doorMat
+        );
+        door.position.z = -doorPanelD / 2;
+        door.castShadow = true;
+        doorGroup.add(door);
+
+        // Scharniere (zwei Zylinder)
+        const hingeGeo = new THREE.CylinderGeometry(0.008, 0.008, 0.04, 12);
+        const h1 = new THREE.Mesh(hingeGeo, metalMat);
+        h1.position.set(0, H/2 - FRAME - 0.07, 0);
+        h1.rotation.x = Math.PI / 2;
+        doorGroup.add(h1);
+        const h2 = h1.clone();
+        h2.position.y = -(H/2 - FRAME - 0.07);
+        doorGroup.add(h2);
+
+        // Türgriff (am freien Ende, gegenüber dem Scharnier)
+        const handle = new THREE.Mesh(
+            new THREE.BoxGeometry(0.018, 0.07, 0.022),
+            handleMat
+        );
+        handle.position.set(0.013, 0, -doorPanelD + 0.04);
+        doorGroup.add(handle);
+
+        // Logo-Label oben auf der Tür (über CanvasTexture)
+        const cvs = document.createElement('canvas');
+        cvs.width = 256; cvs.height = 64;
+        const ctx = cvs.getContext('2d');
+        ctx.fillStyle = '#1c1612';
+        ctx.fillRect(0, 0, 256, 64);
+        ctx.fillStyle = '#F5A623';
+        ctx.font = 'bold 22px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('BT ELEKTROTECHNIK', 128, 32);
+        const labelTex = new THREE.CanvasTexture(cvs);
+        labelTex.colorSpace = THREE.SRGBColorSpace;
+
+        const label = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.22, 0.055),
+            new THREE.MeshBasicMaterial({ map: labelTex })
+        );
+        label.position.set(0.013, (H - 2*FRAME)/2 - 0.06, -doorPanelD/2);
+        label.rotation.y = Math.PI / 2;  // Plane in +X Richtung drehen
+        doorGroup.add(label);
+
+        // Status-LED (grün, leuchtet auf der Tür)
+        const led = new THREE.Mesh(
+            new THREE.SphereGeometry(0.007, 12, 12),
+            new THREE.MeshBasicMaterial({ color: 0x66ff99 })
+        );
+        led.position.set(0.013, (H - 2*FRAME)/2 - 0.13, -doorPanelD/2);
+        doorGroup.add(led);
+
+        // Sanfter Glow um die LED
+        const glow = new THREE.Mesh(
+            new THREE.SphereGeometry(0.018, 16, 16),
+            new THREE.MeshBasicMaterial({
+                color: 0x66ff99, transparent: true, opacity: 0.25
+            })
+        );
+        glow.position.copy(led.position);
+        doorGroup.add(glow);
+
+        // Referenz auf die doorGroup nach außen geben — brauchen wir in Schritt 7
+        uv.userData.doorGroup = doorGroup;
+
+        return uv;
+    }
+
+    const unterverteilung = buildUnterverteilung();
+    // Position: bündig an die linke Wand, in Brusthöhe, leicht nach hinten versetzt
+    unterverteilung.position.set(-ROOM_W/2 + 0.06, 1.5, -0.4);
+    scene.add(unterverteilung);
+
     // ─── 3) Beleuchtung ───
     // Three.js seit r155: physikalisch korrekte Intensitäten (Lumen-Skalierung).
     // Daher hohe Werte für Punktlichter (real wären ~800-1500 Lumen für eine Lampe).
@@ -121,10 +255,12 @@ if (container) {
     // ─── 4) POV-Steuerung: Drag-to-look ───
     // Wir tracken yaw (horizontal) und pitch (vertikal) separat,
     // damit man sich nicht den „Kopf überschlägt".
-    // Startblick: leicht zur linken Wand gedreht (Vorgriff: dort kommt später
-    // die Unterverteilung dran). So sieht der Besucher sofort eine Raumecke
-    // und versteht, dass es ein echter 3D-Raum ist.
-    let yaw = -Math.PI / 6;
+    // Startblick: automatisch auf die Unterverteilung ausrichten
+    const uvPos = unterverteilung.position;
+    let yaw = Math.atan2(
+        -(uvPos.x - camera.position.x),
+        -(uvPos.z - camera.position.z)
+    );
     let pitch = 0;
     let isDragging = false;
     let lastX = 0, lastY = 0;
