@@ -463,11 +463,19 @@ if (container) {
         if (!isVisible) { animationId = null; return; }
         animationId = requestAnimationFrame(animate);
 
+        // Blickrichtung aktualisieren
         camera.rotation.y = yaw;
         camera.rotation.x = pitch;
 
+        // 🌟 NEU: Smooth Zoom Easing (gleitet sanft zum Ziel-Zoom)
+        if (Math.abs(camera.fov - targetFOV) > 0.05) {
+            camera.fov += (targetFOV - camera.fov) * 0.08; // 0.08 ist die Weichheit
+            camera.updateProjectionMatrix(); // Wichtig: Kamera aktualisieren!
+        }
+
         renderer.render(scene, camera);
     }
+    
 
     // ─── 7) Responsive ───
     window.addEventListener('resize', () => {
