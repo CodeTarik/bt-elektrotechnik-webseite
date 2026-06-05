@@ -259,6 +259,72 @@ if (container) {
     unterverteilung.position.set(-ROOM_W/2 + 0.06, 1.5, -0.4);
     scene.add(unterverteilung);
 
+    // ─── 2c) Potentialausgleichsschiene (Dehn / OBO Style) ───
+    function buildPAS() {
+        const pasGroup = new THREE.Group();
+
+        // Materialien für maximalen Realismus
+        const baseMat = new THREE.MeshStandardMaterial({ 
+            color: 0x4a4a4a, roughness: 0.8 // Grauer Kunststoff-Sockel
+        });
+        const brassMat = new THREE.MeshStandardMaterial({ 
+            color: 0xcca652, metalness: 0.85, roughness: 0.25 // Blanke Messingschiene
+        });
+        const screwMat = new THREE.MeshStandardMaterial({ 
+            color: 0xd9d9d9, metalness: 0.9, roughness: 0.2 // Verzinkte Schrauben
+        });
+        const peColor = new THREE.MeshStandardMaterial({ 
+            color: 0x8CBF26, roughness: 0.6 // Grüngelber Look (vereinfacht als heller Limettenton)
+        });
+
+        // 1. Kunststoff-Grundkörper
+        const base = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.025), baseMat);
+        base.castShadow = true;
+        base.receiveShadow = true;
+        pasGroup.add(base);
+
+        // 2. Messing-Schiene
+        const bar = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.01, 0.008), brassMat);
+        bar.position.set(0, 0, 0.015);
+        bar.castShadow = true;
+        pasGroup.add(bar);
+
+        // 3. Schraubklemmen und abgehende Leitungen
+        const positions = [-0.05, -0.02, 0.01, 0.05]; // Klemmen-Positionen auf der Schiene
+        
+        positions.forEach((posX, index) => {
+            // Schraube / Klemme
+            const screw = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.012, 0.012), screwMat);
+            screw.position.set(posX, 0, 0.018);
+            screw.castShadow = true;
+            pasGroup.add(screw);
+
+            // Leitungen anschließen (z.B. Hauptleitung in die Verteilung und in den Boden)
+            if (index === 0) {
+                // Dicke Erdungsleitung (16mm²) nach OBEN in den Zählerschrank
+                const wireUp = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.85), peColor);
+                wireUp.position.set(posX, 0.425, 0.015);
+                wireUp.castShadow = true;
+                pasGroup.add(wireUp);
+            }
+            if (index === 3) {
+                // Dicke Erdungsleitung nach UNTEN in den Boden (Fundamenterder)
+                const wireDown = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.4), peColor);
+                wireDown.position.set(posX, -0.2, 0.015);
+                wireDown.castShadow = true;
+                pasGroup.add(wireDown);
+            }
+        });
+
+        return pasGroup;
+    }
+
+    const potentialausgleich = buildPAS();
+    // Positionierung: An der linken Wand, ca. 30 cm über dem fertigen Fußboden, mittig unter dem Schrank
+    potentialausgleich.position.set(-ROOM_W/2 + 0.015, 0.3, -0.4);
+    potentialausgleich.rotation.y = Math.PI / 2; // Drehung, damit sie flach an der linken Wand sitzt
+    scene.add(potentialausgleich);
+
     // ─── 3) Beleuchtung & PBR-Umgebung ───
     scene.add(new THREE.AmbientLight(0xfff4e0, 0.8));
 
