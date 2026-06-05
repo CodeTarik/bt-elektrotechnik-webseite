@@ -385,7 +385,7 @@ if (container) {
 
     // ─── 5) Bedienhinweis ───
     const hint = document.createElement('div');
-    hint.textContent = '✋  Klicken & ziehen zum Umsehen';
+    hint.textContent = '✋ Ziehen zum Umsehen | 🔍 Scrollen zum Zoomen';
     hint.style.cssText = `
         position: absolute; left: 50%; bottom: 16px;
         transform: translateX(-50%);
