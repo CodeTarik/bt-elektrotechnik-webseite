@@ -1,150 +1,229 @@
-// ─── BT Elektrotechnik · 3D-Smart-Network-Visualisierung ───
-// Zeigt eine zentrale Steuereinheit mit verbundenen Knotenpunkten -
-// symbolisiert moderne Elektroinstallation und KNX-Gebäudeautomation.
+// ─── BT Elektrotechnik · POV-Raum (Schritt 5) ───
+// Erste Stufe des virtuellen Showrooms:
+// Ein leerer realistischer Raum mit Umsehen per Maus-/Touch-Drag.
+// Schutzorgane, Unterverteilung, Garage und Wallbox folgen in den nächsten Schritten.
 
 import * as THREE from 'three';
 
 const container = document.getElementById('three-canvas-container');
 
 if (container) {
-    const GOLD = 0xF5A623;
-
-    // ─── 1) Grundsetup: Szene, Kamera, Renderer ───
+    // ─── 1) Szene, Kamera, Renderer ───
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1612);
+    scene.fog = new THREE.Fog(0x1a1612, 6, 18);
 
     const camera = new THREE.PerspectiveCamera(
-        55,
+        72,
         container.clientWidth / container.clientHeight,
-        0.1, 100
+        0.05, 50
     );
-    camera.position.z = 6;
+    const EYE_HEIGHT = 1.65;            // Augenhöhe (Person ca. 1,80 m groß)
+    // Startposition leicht versetzt, damit man nicht in der Raummitte „klebt"
+    camera.position.set(0.6, EYE_HEIGHT, 1.4);
+    camera.rotation.order = 'YXZ';
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type   = THREE.PCFSoftShadowMap;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping      = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
     container.appendChild(renderer.domElement);
 
-    // Alle 3D-Elemente kommen in EINE Gruppe -
-    // dann können wir die ganze Anlage gemeinsam drehen/neigen.
-    const networkGroup = new THREE.Group();
-    scene.add(networkGroup);
+    // ─── 2) Raumgeometrie ───
+    const ROOM_W = 6;     // Breite (X)
+    const ROOM_H = 2.7;   // Höhe (Y) - typische Raumhöhe
+    const ROOM_D = 5;     // Tiefe (Z)
 
-    // ─── 2) ZENTRALE STEUEREINHEIT (Hub) ───
-    // Außenhülle: Drahtgitter-Polyeder
-    const hubOuter = new THREE.LineSegments(
-        new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(0.95, 0)),
-        new THREE.LineBasicMaterial({ color: GOLD, transparent: true, opacity: 0.95 })
-    );
-    networkGroup.add(hubOuter);
-
-    // Innerer Kern: dichteres, gegenläufiges Drahtgitter
-    const hubCore = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(0.5, 1),
-        new THREE.MeshBasicMaterial({
-            color: GOLD, wireframe: true,
-            transparent: true, opacity: 0.55
+    // Boden (heller Beton-Look)
+    const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(ROOM_W, ROOM_D),
+        new THREE.MeshStandardMaterial({
+            color: 0x504842, roughness: 0.88, metalness: 0.05
         })
     );
-    networkGroup.add(hubCore);
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
 
-    // ─── 3) KNOTENPUNKTE im 3D-Raum verteilt ───
-    // (jeder Knoten = ein angeschlossenes Gerät / ein Raum)
-    const nodePositions = [
-        new THREE.Vector3( 2.6,  1.4,  0.8),
-        new THREE.Vector3(-2.6,  1.5, -0.6),
-        new THREE.Vector3( 2.1, -1.7,  1.2),
-        new THREE.Vector3(-2.2, -1.5,  0.7),
-        new THREE.Vector3( 0.2,  2.4, -1.5),
-        new THREE.Vector3( 0.5, -2.3, -1.2),
-        new THREE.Vector3( 2.9,  0.0, -1.7),
-        new THREE.Vector3(-2.9,  0.0,  1.5),
-    ];
-
-    const nodes = [];
-    nodePositions.forEach(pos => {
-        // Knoten: kleines Oktaeder
-        const node = new THREE.Mesh(
-            new THREE.OctahedronGeometry(0.18, 0),
-            new THREE.MeshBasicMaterial({ color: GOLD })
-        );
-        node.position.copy(pos);
-        networkGroup.add(node);
-        nodes.push(node);
-
-        // Verbindungslinie Hub → Knoten
-        const line = new THREE.Line(
-            new THREE.BufferGeometry().setFromPoints([
-                new THREE.Vector3(0, 0, 0),
-                pos
-            ]),
-            new THREE.LineBasicMaterial({
-                color: GOLD, transparent: true, opacity: 0.22
-            })
-        );
-        networkGroup.add(line);
-    });
-
-    // ─── 4) PARTIKEL-WOLKE im Hintergrund ───
-    const particleCount = 90;
-    const positions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount; i++) {
-        positions[i*3]     = (Math.random() - 0.5) * 12;
-        positions[i*3 + 1] = (Math.random() - 0.5) * 9;
-        positions[i*3 + 2] = (Math.random() - 0.5) * 9;
-    }
-    const particles = new THREE.Points(
-        new THREE.BufferGeometry().setAttribute(
-            'position', new THREE.BufferAttribute(positions, 3)
-        ),
-        new THREE.PointsMaterial({
-            color: GOLD, size: 0.04,
-            transparent: true, opacity: 0.55
+    // Decke (cremeweiß)
+    const ceiling = new THREE.Mesh(
+        new THREE.PlaneGeometry(ROOM_W, ROOM_D),
+        new THREE.MeshStandardMaterial({
+            color: 0xe8e0d2, roughness: 0.95
         })
     );
-    scene.add(particles);
+    ceiling.rotation.x = Math.PI / 2;
+    ceiling.position.y = ROOM_H;
+    scene.add(ceiling);
 
-    // ─── 5) MAUS-PARALLAX (sanftes Neigen) ───
-    const mouse = { x: 0, y: 0 };
-    container.addEventListener('mousemove', (e) => {
-        const rect = container.getBoundingClientRect();
-        mouse.x = ((e.clientX - rect.left) / rect.width)  * 2 - 1;
-        mouse.y = ((e.clientY - rect.top)  / rect.height) * 2 - 1;
+    // Wände (warmer hellbeiger Putz-Ton)
+    const wallMat = new THREE.MeshStandardMaterial({
+        color: 0xc8bca8, roughness: 0.92
     });
-    container.addEventListener('mouseleave', () => {
-        mouse.x = 0; mouse.y = 0;
+    const makeWall = (w, h, x, y, z, rotY) => {
+        const wall = new THREE.Mesh(new THREE.PlaneGeometry(w, h), wallMat);
+        wall.position.set(x, y, z);
+        wall.rotation.y = rotY;
+        wall.receiveShadow = true;
+        scene.add(wall);
+        return wall;
+    };
+    makeWall(ROOM_W, ROOM_H, 0,         ROOM_H/2, -ROOM_D/2, 0);          // Wand Nord (vor uns)
+    makeWall(ROOM_W, ROOM_H, 0,         ROOM_H/2,  ROOM_D/2, Math.PI);    // Wand Süd (hinter uns)
+    makeWall(ROOM_D, ROOM_H, -ROOM_W/2, ROOM_H/2,  0,        Math.PI/2);  // Wand West (links)
+    makeWall(ROOM_D, ROOM_H,  ROOM_W/2, ROOM_H/2,  0,       -Math.PI/2);  // Wand Ost (rechts)
+
+    // Sockelleisten zur Bodenkante (kleiner aber wichtiger Realismus-Detail)
+    const skirtMat = new THREE.MeshStandardMaterial({
+        color: 0x3a3530, roughness: 0.7
     });
+    const makeSkirt = (w, x, y, z, rotY) => {
+        const s = new THREE.Mesh(new THREE.BoxGeometry(w, 0.08, 0.015), skirtMat);
+        s.position.set(x, y, z);
+        s.rotation.y = rotY;
+        scene.add(s);
+    };
+    makeSkirt(ROOM_W, 0,         0.04, -ROOM_D/2 + 0.008, 0);
+    makeSkirt(ROOM_W, 0,         0.04,  ROOM_D/2 - 0.008, 0);
+    makeSkirt(ROOM_D, -ROOM_W/2 + 0.008, 0.04, 0, Math.PI/2);
+    makeSkirt(ROOM_D,  ROOM_W/2 - 0.008, 0.04, 0, Math.PI/2);
 
-    // ─── 6) ANIMATIONS-LOOP ───
-    function animate() {
-        requestAnimationFrame(animate);
+    // ─── 3) Beleuchtung ───
+    // Three.js seit r155: physikalisch korrekte Intensitäten (Lumen-Skalierung).
+    // Daher hohe Werte für Punktlichter (real wären ~800-1500 Lumen für eine Lampe).
+    scene.add(new THREE.AmbientLight(0xfff4e0, 0.8));
 
-        // Gesamte Anlage dreht sich langsam um die Y-Achse
-        networkGroup.rotation.y += 0.003;
+    // Indirektes Licht: simuliert Reflexionen vom Boden/Wänden
+    const hemiLight = new THREE.HemisphereLight(0xfff4e0, 0x40382e, 0.4);
+    scene.add(hemiLight);
 
-        // Innerer Kern dreht gegenläufig - mechanisches Gefühl
-        hubCore.rotation.x += 0.008;
-        hubCore.rotation.y -= 0.006;
+    // Deckenleuchte: warmes Punktlicht in der Raummitte
+    const ceilLight = new THREE.PointLight(0xffe2b8, 60, 14, 1.6);
+    ceilLight.position.set(0, ROOM_H - 0.15, 0);
+    ceilLight.castShadow = true;
+    ceilLight.shadow.mapSize.set(1024, 1024);
+    ceilLight.shadow.bias = -0.0005;
+    scene.add(ceilLight);
 
-        // Knotenpunkte „atmen" - leichtes Pulsieren in der Größe
-        const t = Date.now() * 0.001;
-        nodes.forEach((node, i) => {
-            const scale = 1 + Math.sin(t * 2 + i * 0.8) * 0.25;
-            node.scale.setScalar(scale);
+    // Sichtbarer Lampen-Disc an der Decke
+    const lampMesh = new THREE.Mesh(
+        new THREE.CircleGeometry(0.22, 32),
+        new THREE.MeshBasicMaterial({ color: 0xffeec8 })
+    );
+    lampMesh.position.set(0, ROOM_H - 0.005, 0);
+    lampMesh.rotation.x = Math.PI / 2;
+    scene.add(lampMesh);
+
+    // ─── 4) POV-Steuerung: Drag-to-look ───
+    // Wir tracken yaw (horizontal) und pitch (vertikal) separat,
+    // damit man sich nicht den „Kopf überschlägt".
+    // Startblick: leicht zur linken Wand gedreht (Vorgriff: dort kommt später
+    // die Unterverteilung dran). So sieht der Besucher sofort eine Raumecke
+    // und versteht, dass es ein echter 3D-Raum ist.
+    let yaw = -Math.PI / 6;
+    let pitch = 0;
+    let isDragging = false;
+    let lastX = 0, lastY = 0;
+    const SENS = 0.0042;
+
+    const startDrag = (x, y) => {
+        isDragging = true;
+        lastX = x; lastY = y;
+        container.style.cursor = 'grabbing';
+    };
+    const moveDrag = (x, y) => {
+        if (!isDragging) return;
+        const dx = x - lastX;
+        const dy = y - lastY;
+        lastX = x; lastY = y;
+        // „Drag-the-world"-Mapping: Ziehen nach rechts dreht den Blick nach links
+        yaw   += dx * SENS;
+        pitch += dy * SENS;
+        // Pitch begrenzen
+        const MAX = Math.PI / 2 - 0.15;
+        pitch = Math.max(-MAX, Math.min(MAX, pitch));
+    };
+    const endDrag = () => {
+        isDragging = false;
+        container.style.cursor = 'grab';
+    };
+
+    container.style.cursor = 'grab';
+    container.style.position = 'relative';
+
+    container.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        startDrag(e.clientX, e.clientY);
+    });
+    window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+    window.addEventListener('mouseup', endDrag);
+
+    container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) startDrag(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+    container.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1 && isDragging) {
+            moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+            e.preventDefault();
+        }
+    }, { passive: false });
+    window.addEventListener('touchend', endDrag);
+
+    // ─── 5) Bedienhinweis (verschwindet nach erster Interaktion) ───
+    const hint = document.createElement('div');
+    hint.textContent = '✋  Klicken & ziehen zum Umsehen';
+    hint.style.cssText = `
+        position: absolute; left: 50%; bottom: 16px;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.7);
+        color: #F5A623;
+        padding: 8px 18px;
+        border: 1px solid rgba(245,166,35,0.5);
+        border-radius: 999px;
+        font: 700 0.7rem/1 system-ui, sans-serif;
+        letter-spacing: 0.15em; text-transform: uppercase;
+        pointer-events: none;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        transition: opacity 0.6s ease;
+        z-index: 10;
+    `;
+    container.appendChild(hint);
+    let hasInteracted = false;
+    const fadeHint = () => {
+        if (hasInteracted) return;
+        hasInteracted = true;
+        hint.style.opacity = '0';
+    };
+    container.addEventListener('mousedown', fadeHint);
+    container.addEventListener('touchstart', fadeHint);
+
+    // ─── 6) Sichtbarkeit + Render-Loop ───
+    let isVisible   = false;
+    let animationId = null;
+
+    const visibilityObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            isVisible = entry.isIntersecting;
+            if (isVisible && animationId === null) animate();
         });
+    }, { threshold: 0.1 });
+    visibilityObserver.observe(container);
 
-        // Maus-Parallax: sanftes Neigen statt harter Folgebewegung (Lerp)
-        networkGroup.rotation.x += (mouse.y * 0.25 - networkGroup.rotation.x) * 0.04;
-        networkGroup.rotation.z += (mouse.x * 0.15 - networkGroup.rotation.z) * 0.04;
+    function animate() {
+        if (!isVisible) { animationId = null; return; }
+        animationId = requestAnimationFrame(animate);
 
-        // Partikel ganz langsam in andere Richtung mitdrehen
-        particles.rotation.y += 0.0005;
-        particles.rotation.x += 0.0002;
+        camera.rotation.y = yaw;
+        camera.rotation.x = pitch;
 
         renderer.render(scene, camera);
     }
-    animate();
 
-    // ─── 7) RESPONSIVE ───
+    // ─── 7) Responsive ───
     window.addEventListener('resize', () => {
         camera.aspect = container.clientWidth / container.clientHeight;
         camera.updateProjectionMatrix();
