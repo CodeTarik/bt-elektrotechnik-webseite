@@ -1,7 +1,6 @@
-// ─── BT Elektrotechnik · POV-Raum (Schritt 5) ───
-// Erste Stufe des virtuellen Showrooms:
-// Ein leerer realistischer Raum mit Umsehen per Maus-/Touch-Drag.
-// Schutzorgane, Unterverteilung, Garage und Wallbox folgen in den nächsten Schritten.
+// ─── BT Elektrotechnik · POV-Raum (Schritt 6) ───
+// Virtueller Showroom mit prozeduralem Hager-Zählerschrank nach CAD-Vorbild.
+// Umsehen per Maus-/Touch-Drag. Klick öffnet die Schranktür.
 
 import * as THREE from 'three';
 
@@ -77,7 +76,7 @@ if (container) {
     makeWall(ROOM_D, ROOM_H, -ROOM_W/2, ROOM_H/2,  0,        Math.PI/2);  // Wand West (links)
     makeWall(ROOM_D, ROOM_H,  ROOM_W/2, ROOM_H/2,  0,       -Math.PI/2);  // Wand Ost (rechts)
 
-    // Sockelleisten zur Bodenkante (kleiner aber wichtiger Realismus-Detail)
+    // Sockelleisten zur Bodenkante
     const skirtMat = new THREE.MeshStandardMaterial({
         color: 0x3a3530, roughness: 0.7
     });
@@ -96,24 +95,16 @@ if (container) {
     function buildUnterverteilung() {
         const uv = new THREE.Group();
 
-        // Exakte Hager-Maße (z.B.univers Z Aufputz-Schrank, ca. 5 Reihen/2-feldig)
-        const W = 0.16;      // Tiefe (X, steht von der Wand ab)
-        const H = 0.95;      // Höhe (Y)
-        const D = 0.55;      // Breite (Z)
+        // Exakte Hager-Maße (univers Z Aufputz-Schrank, ca. 5 Reihen / 2-feldig)
+        const W = 0.16;        // Tiefe (X, steht von der Wand ab)
+        const H = 0.95;        // Höhe (Y)
+        const D = 0.55;        // Breite (Z)
         const FRAME_W = 0.015; // Filigraner Hager-Stahlblechrahmen
-
-        // 🌟 1. Texturen laden für echten Fotorealismus
-        const textureLoader = new THREE.TextureLoader();
-        
-        // Nutze hier ein echtes, hochauflösendes Foto von einem Hager-Innenleben, 
-        // das du sauber zugeschnitten hast (RCDs, MID-Zähler, PV-Manager)
-        const innenlebenTex = textureLoader.load('./images/hager_innenleben_pro.jpg');
-        innenlebenTex.colorSpace = THREE.SRGBColorSpace;
 
         // Typische Hager-Pulverbeschichtung (Verkehrsweiß Matt RAL 9016)
         const hagerWeissMat = new THREE.MeshStandardMaterial({
             color: 0xfafafa, 
-            roughness: 0.42, // Erzeugt den typischen seidenmatten Blech-Reflex
+            roughness: 0.42, // Seidenmatter Blech-Reflex
             metalness: 0.15
         });
 
@@ -123,12 +114,6 @@ if (container) {
             metalness: 0.2
         });
 
-        const metallGlanz = new THREE.MeshStandardMaterial({
-            color: 0xcccccc,
-            roughness: 0.2,
-            metalness: 0.8
-        });
-
         // Korpus (Hintere Schale an der Wand)
         const korpus = new THREE.Mesh(new THREE.BoxGeometry(W - 0.01, H - 0.01, D - 0.01), hagerWeissMat);
         korpus.position.x = -(0.01 / 2);
@@ -136,26 +121,74 @@ if (container) {
         korpus.receiveShadow = true;
         uv.add(korpus);
 
-        // 🌟 2. Das Innenleben (Wird sichtbar, wenn die Tür aufgeht)
-        // Wir bauen eine Vertiefung ein, in der die fotorealistische Textur sitzt
+        // 🌟 HIER EINGEFÜGT: Das prozedurale 3D-Innenleben (Wird beim Öffnen sichtbar)
         const innenlebenGruppe = new THREE.Group();
-        innenlebenGruppe.position.x = W / 2 - 0.02; // Leicht versenkt im Schrank
+        innenlebenGruppe.position.x = W / 2 - 0.015; // Leicht versenkt im Gehäuse platziert
         uv.add(innenlebenGruppe);
 
-        // Die fotorealistische Trägerplatte für die Schutzorgane
-        const verteilerFeld = new THREE.Mesh(
-            new THREE.PlaneGeometry(D - 0.04, H - 0.04),
-            new THREE.MeshStandardMaterial({ 
-                map: innenlebenTex,
-                roughness: 0.5,
-                metalness: 0.1
-            })
-        );
-        verteilerFeld.rotation.y = Math.PI / 2; // Ausrichtung in den Raum hinein
-        verteilerFeld.receiveShadow = true;
-        innenlebenGruppe.add(verteilerFeld);
+        // Materialien für die Einbaukomponenten
+        const panelGrau = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, roughness: 0.5 });
+        const apzBlau   = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.4 }); // Hager APZ-Blau
+        const kupfer    = new THREE.MeshStandardMaterial({ color: 0xd17a34, metalness: 0.8, roughness: 0.2 });
+        const automat   = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, roughness: 0.5 });
+        const rcdHebel  = new THREE.MeshStandardMaterial({ color: 0xd9534f }); // Rot für Prüftaste
 
-        // 🌟 3. Der charakteristische Hager-Frontrahmen (Kantiges Design)
+        // 1. Die Innere Trägerplatte (Rückwand der Felder)
+        const backplate = new THREE.Mesh(new THREE.PlaneGeometry(D - 0.02, H - 0.04), panelGrau);
+        backplate.rotation.y = Math.PI / 2;
+        backplate.receiveShadow = true;
+        innenlebenGruppe.add(backplate);
+
+        // 2. Linkes Feld: Sammelschienen unten (NAR / 5-polig)
+        const schienenGruppe = new THREE.Group();
+        schienenGruppe.position.set(0.002, -H/2 + 0.18, D/4);
+        innenlebenGruppe.add(schienenGruppe);
+
+        for (let i = 0; i < 5; i++) {
+            const schiene = new THREE.Mesh(new THREE.BoxGeometry(0.005, 0.012, D/2 - 0.04), kupfer);
+            schiene.position.y = i * 0.025;
+            schiene.castShadow = true;
+            schienenGruppe.add(schiene);
+        }
+
+        // 3. Linkes Feld: Zählerplatz (ZP1 ohne SLS)
+        const zaehlerPlatz = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.35, 0.22), automat);
+        zaehlerPlatz.position.set(0.01, 0.05, D/4);
+        zaehlerPlatz.castShadow = true;
+        innenlebenGruppe.add(zaehlerPlatz);
+
+        // 4. Rechtes Feld: APZ-Raum (Oben rechts mit blauer Abdeckung)
+        const apzBlock = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.09, 0.22), apzBlau);
+        apzBlock.position.set(0.008, H/2 - 0.08, -D/4);
+        apzBlock.castShadow = true;
+        innenlebenGruppe.add(apzBlock);
+
+        // 5. Rechtes Feld: 3 Reihen Hutschienen-Schutzorgane
+        const reihenY = [0.1, -0.06, -0.22]; 
+        reihenY.forEach((yPos) => {
+            const reihenGruppe = new THREE.Group();
+            reihenGruppe.position.set(0.008, yPos, -D/4);
+            innenlebenGruppe.add(reihenGruppe);
+
+            // Automaten-Block (Grundkörper für LS-Schalter)
+            const automatenBreite = 0.20;
+            const block = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.06, automatenBreite), automat);
+            block.castShadow = true;
+            reihenGruppe.add(block);
+
+            // Typ B RCD farblich separat hervorheben (allstromsensitiv für Wallbox)
+            const rcd = new THREE.Mesh(new THREE.BoxGeometry(0.017, 0.058, 0.04), new THREE.MeshStandardMaterial({color: 0xffffff, roughness: 0.4}));
+            rcd.position.z = automatenBreite/2 - 0.02;
+            rcd.castShadow = true;
+            reihenGruppe.add(rcd);
+
+            // RCD Test-Button Detail
+            const testButton = new THREE.Mesh(new THREE.BoxGeometry(0.019, 0.01, 0.01), rcdHebel);
+            testButton.position.set(0.002, 0.015, automatenBreite/2 - 0.02);
+            reihenGruppe.add(testButton);
+        });
+
+        // ─── Frontrahmen & Tür-Mechanik ───
         const rahmenDicke = 0.012;
         const rahmenX = W / 2 + rahmenDicke / 2;
         
@@ -171,9 +204,8 @@ if (container) {
         const rfRight = rfLeft.clone();
         rfRight.position.z = D / 2 - FRAME_W / 2; uv.add(rfRight);
 
-        // 🌟 4. TÜR-GRUPPE (Exakter Hager-Look, kantig und flach)
+        // TÜR-GRUPPE (Drehpunkt Kamera-Links am Scharnier)
         const doorGroup = new THREE.Group();
-        // Drehpunkt exakt auf der Scharnierseite (Kamera-Links / Wand-Inneseite)
         doorGroup.position.set(rahmenX + rahmenDicke / 2, 0, D / 2 - FRAME_W);
         uv.add(doorGroup);
 
@@ -186,29 +218,27 @@ if (container) {
         door.castShadow = true;
         doorGroup.add(door);
 
-        // 🌟 5. Der markante Hager-Verschluss (Anthrazitfarbener Klapphebel)
+        // Hager-Verschluss (Anthrazitfarbener Klapphebel)
         const griffGruppe = new THREE.Group();
-        griffGruppe.position.set(0.004, 0, -doorW + 0.05); // Auf Griffhöhe platziert
+        griffGruppe.position.set(0.004, 0, -doorW + 0.05);
         doorGroup.add(griffGruppe);
 
-        // Verschluss-Platte
         const verschlussBasis = new THREE.Mesh(new THREE.BoxGeometry(0.005, 0.12, 0.025), hagerAnthrazit);
         griffGruppe.add(verschlussBasis);
 
-        // Der eigentliche Hebel/Schlitzschloss-Detail
         const hebel = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.06, 0.012), hagerAnthrazit);
         hebel.position.x = 0.002;
         griffGruppe.add(hebel);
 
-        // Dezent eingeprägtes Hager-Logo per kleiner CanvasTexture (optional) oder edler Beschriftung
+        // hager Logo-Label per CanvasTexture
         const cvs = document.createElement('canvas');
         cvs.width = 128; cvs.height = 32;
         const ctx = cvs.getContext('2d');
         ctx.fillStyle = '#fafafa';
         ctx.fillRect(0, 0, 128, 32);
         ctx.fillStyle = '#2b2c2c';
-        ctx.font = 'bold 14px sans-serif';
-        ctx.fillText('hager', 10, 20);
+        ctx.font = 'bold 16px sans-serif';
+        ctx.fillText('hager', 12, 22);
         const hagerTex = new THREE.CanvasTexture(cvs);
         
         const brandLabel = new THREE.Mesh(
@@ -219,7 +249,6 @@ if (container) {
         brandLabel.rotation.y = Math.PI / 2;
         doorGroup.add(brandLabel);
 
-        // Referenz sichern für die spätere Klick-Animation
         uv.userData.doorGroup = doorGroup;
         uv.userData.isOpened = false;
 
@@ -227,20 +256,15 @@ if (container) {
     }
 
     const unterverteilung = buildUnterverteilung();
-    // Position: bündig an die linke Wand, in Brusthöhe, leicht nach hinten versetzt
     unterverteilung.position.set(-ROOM_W/2 + 0.06, 1.5, -0.4);
     scene.add(unterverteilung);
 
-    // ─── 3) Beleuchtung ───
-    // Three.js seit r155: physikalisch korrekte Intensitäten (Lumen-Skalierung).
-    // Daher hohe Werte für Punktlichter (real wären ~800-1500 Lumen für eine Lampe).
+    // ─── 3) Beleuchtung & PBR-Umgebung ───
     scene.add(new THREE.AmbientLight(0xfff4e0, 0.8));
 
-    // Indirektes Licht: simuliert Reflexionen vom Boden/Wänden
     const hemiLight = new THREE.HemisphereLight(0xfff4e0, 0x40382e, 0.4);
     scene.add(hemiLight);
 
-    // Deckenleuchte: warmes Punktlicht in der Raummitte
     const ceilLight = new THREE.PointLight(0xffe2b8, 60, 14, 1.6);
     ceilLight.position.set(0, ROOM_H - 0.15, 0);
     ceilLight.castShadow = true;
@@ -248,12 +272,11 @@ if (container) {
     ceilLight.shadow.bias = -0.0005;
     scene.add(ceilLight);
 
-    // 🌟 Generiere eine prozedurale Umgebung für PBR-Reflektionen (Beseitigt den "Spiel"-Look)
+    // PMREM Generator erzeugt plastische Spiegelungen auf den matten Hager-Flächen
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
     scene.environment = pmremGenerator.fromScene(new THREE.Scene()).texture;
 
-    // Sichtbarer Lampen-Disc an der Decke
     const lampMesh = new THREE.Mesh(
         new THREE.CircleGeometry(0.22, 32),
         new THREE.MeshBasicMaterial({ color: 0xffeec8 })
@@ -263,9 +286,6 @@ if (container) {
     scene.add(lampMesh);
 
     // ─── 4) POV-Steuerung: Drag-to-look ───
-    // Wir tracken yaw (horizontal) und pitch (vertikal) separat,
-    // damit man sich nicht den „Kopf überschlägt".
-    // Startblick: automatisch auf die Unterverteilung ausrichten
     const uvPos = unterverteilung.position;
     let yaw = Math.atan2(
         -(uvPos.x - camera.position.x),
@@ -286,10 +306,8 @@ if (container) {
         const dx = x - lastX;
         const dy = y - lastY;
         lastX = x; lastY = y;
-        // „Drag-the-world"-Mapping: Ziehen nach rechts dreht den Blick nach links
         yaw   += dx * SENS;
         pitch += dy * SENS;
-        // Pitch begrenzen
         const MAX = Math.PI / 2 - 0.15;
         pitch = Math.max(-MAX, Math.min(MAX, pitch));
     };
@@ -319,7 +337,53 @@ if (container) {
     }, { passive: false });
     window.addEventListener('touchend', endDrag);
 
-    // ─── 5) Bedienhinweis (verschwindet nach erster Interaktion) ───
+    // ─── 4b) Smooth Zoom-Funktion (Mausrad & Touch-Pinch) ───
+    let targetFOV = 72; // Start-Blickwinkel
+    const MIN_FOV = 20; // Maximaler Zoom (sehr nah dran!)
+    const MAX_FOV = 72; // Normaler Raum-Blickwinkel
+
+    // Desktop: Zoom per Mausrad
+    container.addEventListener('wheel', (e) => {
+        e.preventDefault(); // Verhindert, dass die Webseite beim Zoomen scrollt
+        // DeltaY bestimmt die Richtung. Multiplikator bestimmt die Scroll-Geschwindigkeit.
+        targetFOV += e.deltaY * 0.05; 
+        targetFOV = Math.max(MIN_FOV, Math.min(MAX_FOV, targetFOV));
+    }, { passive: false });
+
+    // Mobile: Pinch-to-Zoom (Zwei Finger)
+    let initialPinchDistance = null;
+    let initialFOV = targetFOV;
+
+    container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            initialPinchDistance = Math.hypot(dx, dy);
+            initialFOV = targetFOV;
+        }
+    }, { passive: false });
+
+    container.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && initialPinchDistance !== null) {
+            e.preventDefault(); // Verhindert das Neuladen/Scrollen auf dem Handy
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const currentDistance = Math.hypot(dx, dy);
+            
+            // Berechnung des Zoom-Faktors anhand der Fingerbewegung
+            const pinchScale = initialPinchDistance / currentDistance;
+            targetFOV = initialFOV * pinchScale;
+            targetFOV = Math.max(MIN_FOV, Math.min(MAX_FOV, targetFOV));
+        }
+    }, { passive: false });
+
+    container.addEventListener('touchend', (e) => {
+        if (e.touches.length < 2) {
+            initialPinchDistance = null;
+        }
+    });
+
+    // ─── 5) Bedienhinweis ───
     const hint = document.createElement('div');
     hint.textContent = '✋  Klicken & ziehen zum Umsehen';
     hint.style.cssText = `
@@ -347,12 +411,11 @@ if (container) {
     container.addEventListener('mousedown', fadeHint);
     container.addEventListener('touchstart', fadeHint);
 
-    // ─── 5b) Klick-Interaktion für den Hager-Schrank ───
+    // ─── 5b) Klick-Interaktion zum Öffnen der Tür ───
     const raycaster = new THREE.Raycaster();
     const mouseClick = new THREE.Vector2();
 
     container.addEventListener('click', (e) => {
-        // Wenn der Nutzer die Kamera stark gedreht hat, war es ein Drag, kein Klick
         if (isDragging) return; 
 
         const rect = container.getBoundingClientRect();
@@ -360,25 +423,20 @@ if (container) {
         mouseClick.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
         raycaster.setFromCamera(mouseClick, camera);
-        
-        // Überprüfen, ob die Unterverteilung getroffen wurde
         const intersects = raycaster.intersectObjects(unterverteilung.children, true);
 
         if (intersects.length > 0) {
             const doorG = unterverteilung.userData.doorGroup;
             const isOpen = unterverteilung.userData.isOpened;
 
-            // Einfache, flüssige Rotations-Animation ohne externe Bibliotheken
-            let targetRotation = isOpen ? 0 : Math.PI * 0.65; // 115 Grad öffnen
-            
-            // Animation via simpler Interpolation im Render-Loop vorbereiten
-            let currentRot = doorG.rotation.y;
+            let targetRotation = isOpen ? 0 : Math.PI * 0.65; // 115 Grad Schwenk
             
             const performOpenAnimation = () => {
                 let diff = targetRotation - doorG.rotation.y;
                 if (Math.abs(diff) > 0.001) {
-                    doorG.rotation.y += diff * 0.12; // Easing-Faktor
-                    requestAnimationFrame(performOpenAnimation);
+                    doorG.rotation.y += diff * 0.12;
+                    // Hinweis ausblenden, falls noch sichtbar
+                    fadeHint();
                 } else {
                     doorG.rotation.y = targetRotation;
                 }
