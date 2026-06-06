@@ -396,6 +396,94 @@ if (container) {
     hausanschluss.position.set(-ROOM_W/2 + 0.07, 0.75, -0.4);
     scene.add(hausanschluss);
 
+    // ─── 2e) Tür zur Garage (an der Ostwand · rechts) ───
+    function buildGarageDoor() {
+        const g = new THREE.Group();
+        const W = 0.95;  // Türbreite (Z im Welt)
+        const H = 2.10;  // Türhöhe (Y)
+        const FT = 0.06; // Rahmen-Dicke (Y/Z-Richtung)
+        const FD = 0.05; // Rahmen-Tiefe (X-Richtung, in Raum)
+
+        const frameMat = new THREE.MeshStandardMaterial({
+            color: 0x2a2620, roughness: 0.5, metalness: 0.3
+        });
+        const doorMat = new THREE.MeshStandardMaterial({
+            color: 0x3a3530, roughness: 0.55, metalness: 0.15
+        });
+        const openingMat = new THREE.MeshBasicMaterial({ color: 0x080706 });
+        const handleMat = new THREE.MeshStandardMaterial({
+            color: 0xc0a06a, roughness: 0.4, metalness: 0.75
+        });
+
+        // "Öffnung" hinter der Tür — dunkles Rechteck, das den Eindruck eines
+        // tieferen Durchgangs erzeugt, sobald die Tür leicht versetzt davor sitzt.
+        const opening = new THREE.Mesh(new THREE.PlaneGeometry(W, H), openingMat);
+        opening.position.x = -0.001;
+        opening.rotation.y = -Math.PI / 2;  // Normale in -X (in den Raum)
+        g.add(opening);
+
+        // Rahmen (drei Seiten: oben, links, rechts — unten nicht, da Türschwelle)
+        const topF = new THREE.Mesh(
+            new THREE.BoxGeometry(FD, FT, W + 2*FT), frameMat
+        );
+        topF.position.set(-FD/2, H/2 + FT/2, 0);
+        g.add(topF);
+
+        const leftF = new THREE.Mesh(
+            new THREE.BoxGeometry(FD, H + FT, FT), frameMat
+        );
+        leftF.position.set(-FD/2, FT/2, -W/2 - FT/2);
+        g.add(leftF);
+
+        const rightF = leftF.clone();
+        rightF.position.set(-FD/2, FT/2, W/2 + FT/2);
+        g.add(rightF);
+
+        // Türblatt — leicht zurückversetzt in der Rahmenöffnung
+        const panel = new THREE.Mesh(
+            new THREE.BoxGeometry(0.04, H - 0.04, W - 0.04), doorMat
+        );
+        panel.position.set(-FD + 0.025, -0.02, 0);
+        panel.castShadow = true;
+        g.add(panel);
+
+        // Griff (gold-bronze) auf der linken Türseite (vom Raum aus gesehen)
+        const handle = new THREE.Mesh(
+            new THREE.BoxGeometry(0.04, 0.025, 0.12), handleMat
+        );
+        handle.position.set(-FD - 0.025, 0, -W/2 + 0.15);
+        g.add(handle);
+
+        // Beschilderung "→ GARAGE" über der Tür
+        const cvs = document.createElement('canvas');
+        cvs.width = 512; cvs.height = 96;
+        const c = cvs.getContext('2d');
+        c.fillStyle = '#1c1612';
+        c.fillRect(0, 0, 512, 96);
+        c.fillStyle = '#F5A623';
+        c.font = 'bold 44px sans-serif';
+        c.textAlign = 'center';
+        c.textBaseline = 'middle';
+        c.fillText('→  GARAGE', 256, 48);
+        const tex = new THREE.CanvasTexture(cvs);
+        tex.colorSpace = THREE.SRGBColorSpace;
+
+        const lbl = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.7, 0.13),
+            new THREE.MeshBasicMaterial({ map: tex })
+        );
+        lbl.position.set(-FD - 0.005, H/2 + FT + 0.13, 0);
+        lbl.rotation.y = -Math.PI / 2;
+        g.add(lbl);
+
+        return g;
+    }
+
+    const garageDoor = buildGarageDoor();
+    // Auf die Ostwand setzen (X = +ROOM_W/2 = rechte Wand), leicht südlich von Mitte
+    garageDoor.position.set(ROOM_W/2, 1.05, 0.5);
+    scene.add(garageDoor);
+
     // ─── 3) Beleuchtung & PBR-Umgebung ───
     scene.add(new THREE.AmbientLight(0xfff4e0, 0.8));
     const hemiLight = new THREE.HemisphereLight(0xfff4e0, 0x40382e, 0.4);
@@ -414,6 +502,202 @@ if (container) {
 
     const lampMesh = new THREE.Mesh(new THREE.CircleGeometry(0.22, 32), new THREE.MeshBasicMaterial({ color: 0xffeec8 }));
     lampMesh.position.set(0, ROOM_H - 0.005, 0); lampMesh.rotation.x = Math.PI / 2; scene.add(lampMesh);
+
+    // ─── 3b) GARAGE-SZENE als separate THREE.Scene ───
+    function buildBackDoor(label) {
+        // Wie die Garage-Tür, aber mit "← TECHNIKRAUM"
+        const g = new THREE.Group();
+        const W = 0.95, H = 2.10, FT = 0.06, FD = 0.05;
+        const frameMat = new THREE.MeshStandardMaterial({ color: 0x2a2620, roughness: 0.5, metalness: 0.3 });
+        const doorMat  = new THREE.MeshStandardMaterial({ color: 0x3a3530, roughness: 0.55, metalness: 0.15 });
+        const openingMat = new THREE.MeshBasicMaterial({ color: 0x080706 });
+        const handleMat = new THREE.MeshStandardMaterial({ color: 0xc0a06a, roughness: 0.4, metalness: 0.75 });
+
+        const opening = new THREE.Mesh(new THREE.PlaneGeometry(W, H), openingMat);
+        opening.position.x = -0.001; opening.rotation.y = -Math.PI / 2; g.add(opening);
+
+        const topF = new THREE.Mesh(new THREE.BoxGeometry(FD, FT, W + 2*FT), frameMat);
+        topF.position.set(-FD/2, H/2 + FT/2, 0); g.add(topF);
+        const leftF = new THREE.Mesh(new THREE.BoxGeometry(FD, H + FT, FT), frameMat);
+        leftF.position.set(-FD/2, FT/2, -W/2 - FT/2); g.add(leftF);
+        const rightF = leftF.clone();
+        rightF.position.set(-FD/2, FT/2, W/2 + FT/2); g.add(rightF);
+
+        const panel = new THREE.Mesh(new THREE.BoxGeometry(0.04, H - 0.04, W - 0.04), doorMat);
+        panel.position.set(-FD + 0.025, -0.02, 0); panel.castShadow = true; g.add(panel);
+
+        const handle = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.025, 0.12), handleMat);
+        handle.position.set(-FD - 0.025, 0, -W/2 + 0.15); g.add(handle);
+
+        const cvs = document.createElement('canvas');
+        cvs.width = 512; cvs.height = 96;
+        const c = cvs.getContext('2d');
+        c.fillStyle = '#1c1612'; c.fillRect(0, 0, 512, 96);
+        c.fillStyle = '#F5A623';
+        c.font = 'bold 38px sans-serif';
+        c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.fillText(label, 256, 48);
+        const tex = new THREE.CanvasTexture(cvs);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        const lbl = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.13), new THREE.MeshBasicMaterial({ map: tex }));
+        lbl.position.set(-FD - 0.005, H/2 + FT + 0.13, 0); lbl.rotation.y = -Math.PI / 2; g.add(lbl);
+
+        return g;
+    }
+
+    function buildGarageScene() {
+        const gScene = new THREE.Scene();
+        gScene.background = new THREE.Color(0x141210);
+        gScene.fog = new THREE.Fog(0x141210, 8, 28);
+        gScene.environment = scene.environment;   // PMREM-Map vom Technikraum übernehmen
+
+        const GW = 7, GH = 3.0, GD = 7;
+
+        // Beton-Boden
+        const gFloor = new THREE.Mesh(
+            new THREE.PlaneGeometry(GW, GD),
+            new THREE.MeshStandardMaterial({ color: 0x3a3835, roughness: 0.92, metalness: 0.05 })
+        );
+        gFloor.rotation.x = -Math.PI / 2;
+        gFloor.receiveShadow = true;
+        gScene.add(gFloor);
+
+        // Decke
+        const gCeil = new THREE.Mesh(
+            new THREE.PlaneGeometry(GW, GD),
+            new THREE.MeshStandardMaterial({ color: 0xd8d2c4, roughness: 0.95 })
+        );
+        gCeil.rotation.x = Math.PI / 2; gCeil.position.y = GH; gScene.add(gCeil);
+
+        // Wände — kühleres Betongrau für Industrie-Look
+        const gWallMat = new THREE.MeshStandardMaterial({ color: 0xb8b2a4, roughness: 0.95 });
+        const mw = (w, h, x, y, z, ry) => {
+            const wall = new THREE.Mesh(new THREE.PlaneGeometry(w, h), gWallMat);
+            wall.position.set(x, y, z); wall.rotation.y = ry; wall.receiveShadow = true;
+            gScene.add(wall);
+        };
+        mw(GW, GH, 0,        GH/2, -GD/2, 0);          // Nord (vor uns, das große Garagentor kommt hier hin)
+        mw(GW, GH, 0,        GH/2,  GD/2, Math.PI);    // Süd
+        mw(GD, GH, -GW/2,    GH/2,  0,    Math.PI/2);  // West (links — hier kommt die Wallbox dran)
+        mw(GD, GH,  GW/2,    GH/2,  0,   -Math.PI/2);  // Ost (rechts — Rück-Tür zum Technikraum)
+
+        // Sockelleisten
+        const skMat = new THREE.MeshStandardMaterial({ color: 0x2a2826, roughness: 0.6 });
+        const mkSkirt = (w, x, y, z, ry) => {
+            const s = new THREE.Mesh(new THREE.BoxGeometry(w, 0.08, 0.015), skMat);
+            s.position.set(x, y, z); s.rotation.y = ry; gScene.add(s);
+        };
+        mkSkirt(GW, 0, 0.04, -GD/2 + 0.008, 0);
+        mkSkirt(GW, 0, 0.04,  GD/2 - 0.008, 0);
+        mkSkirt(GD, -GW/2 + 0.008, 0.04, 0, Math.PI/2);
+        mkSkirt(GD,  GW/2 - 0.008, 0.04, 0, Math.PI/2);
+
+        // Beleuchtung — etwas kühler/weißer als der Technikraum
+        gScene.add(new THREE.AmbientLight(0xf0eedd, 0.7));
+        const gHemi = new THREE.HemisphereLight(0xf0eedd, 0x383834, 0.45);
+        gScene.add(gHemi);
+
+        const gCeilLight = new THREE.PointLight(0xfff2d8, 55, 18, 1.6);
+        gCeilLight.position.set(0, GH - 0.2, 0);
+        gCeilLight.castShadow = true;
+        gCeilLight.shadow.mapSize.set(1024, 1024);
+        gCeilLight.shadow.bias = -0.0005;
+        gScene.add(gCeilLight);
+
+        const gLamp = new THREE.Mesh(
+            new THREE.CircleGeometry(0.28, 32),
+            new THREE.MeshBasicMaterial({ color: 0xfff2d8 })
+        );
+        gLamp.position.set(0, GH - 0.01, 0); gLamp.rotation.x = Math.PI / 2;
+        gScene.add(gLamp);
+
+        // Rück-Tür auf der OSTWAND (rechts in der Garage) zurück zum Technikraum
+        const backDoor = buildBackDoor('←  TECHNIKRAUM');
+        backDoor.position.set(GW/2, 1.05, -1.0);
+        gScene.add(backDoor);
+
+        // Hinweis-Plane an der WESTwand — hier kommt in Schritt 9 die Wallbox dran
+        // (für jetzt nur als visuelle Markierung, damit man weiß: hier passiert was)
+        const placeholder = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.5, 0.7),
+            new THREE.MeshBasicMaterial({
+                color: 0x1c1612, transparent: true, opacity: 0.6
+            })
+        );
+        placeholder.position.set(-GW/2 + 0.005, 1.2, -0.5);
+        placeholder.rotation.y = Math.PI / 2;
+        gScene.add(placeholder);
+
+        // Beschriftung "WALLBOX · folgt" mittig auf dem Platzhalter
+        const phCvs = document.createElement('canvas');
+        phCvs.width = 256; phCvs.height = 96;
+        const phCtx = phCvs.getContext('2d');
+        phCtx.fillStyle = 'rgba(0,0,0,0)'; phCtx.fillRect(0, 0, 256, 96);
+        phCtx.fillStyle = '#F5A623';
+        phCtx.font = 'bold 26px sans-serif';
+        phCtx.textAlign = 'center'; phCtx.textBaseline = 'middle';
+        phCtx.fillText('WALLBOX', 128, 38);
+        phCtx.font = 'bold 14px sans-serif';
+        phCtx.fillStyle = '#aaa';
+        phCtx.fillText('folgt in Schritt 9', 128, 64);
+        const phTex = new THREE.CanvasTexture(phCvs);
+        phTex.colorSpace = THREE.SRGBColorSpace;
+        const phLbl = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.35, 0.13),
+            new THREE.MeshBasicMaterial({ map: phTex, transparent: true })
+        );
+        phLbl.position.set(-GW/2 + 0.01, 1.2, -0.5);
+        phLbl.rotation.y = Math.PI / 2;
+        gScene.add(phLbl);
+
+        return { scene: gScene, backDoor };
+    }
+
+    const garage = buildGarageScene();
+
+    // ─── 3c) Aktive Szene + Start-Positionen + Fade-Übergang ───
+    let activeScene = scene;                     // Start: Technikraum
+    const techStartPos = camera.position.clone(); // wird unten überschrieben
+    const techStartYaw = { value: 0 };            // wird unten überschrieben
+    const garageStartPos = new THREE.Vector3(1.5, EYE_HEIGHT, -0.5);
+    const garageStartYaw = Math.PI / 2;          // Blick nach -X = direkt auf die Wallbox-Wand
+
+    // Schwarzer Fade-Overlay über dem Canvas
+    const fadeOverlay = document.createElement('div');
+    fadeOverlay.style.cssText = `
+        position: absolute; inset: 0; background: #000;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.55s ease;
+        z-index: 5;
+    `;
+    container.appendChild(fadeOverlay);
+
+    // Zustand-Tracker: laufen wir gerade durch eine Tür?
+    let transitioning = false;
+
+    function transitionTo(target) {
+        if (transitioning) return;
+        transitioning = true;
+        fadeOverlay.style.opacity = '1';
+        setTimeout(() => {
+            if (target === 'garage') {
+                // Aktuelle Tech-Pos speichern, dann in die Garage springen
+                techStartPos.copy(camera.position);
+                techStartYaw.value = yaw;
+                activeScene = garage.scene;
+                camera.position.copy(garageStartPos);
+                yaw = garageStartYaw;
+                pitch = 0;
+            } else {
+                activeScene = scene;
+                camera.position.copy(techStartPos);
+                yaw = techStartYaw.value;
+                pitch = 0;
+            }
+            fadeOverlay.style.opacity = '0';
+            setTimeout(() => { transitioning = false; }, 550);
+        }, 550);
+    }
 
     // ─── 4) POV-Steuerung: Drag-to-look ───
     const uvPos = unterverteilung.position;
@@ -455,22 +739,49 @@ if (container) {
     const fadeHint = () => { if (hasInteracted) return; hasInteracted = true; hint.style.opacity = '0'; };
     container.addEventListener('mousedown', fadeHint); container.addEventListener('touchstart', fadeHint);
 
-    // ─── 5b) Klick-Interaktion zum Öffnen der Tür ───
+    // ─── 5b) Klick-Interaktion: UV-Tür öffnen + Garage-Übergang ───
     const raycaster = new THREE.Raycaster(); const mouseClick = new THREE.Vector2();
     container.addEventListener('click', (e) => {
-        if (isDragging) return; 
+        if (isDragging || transitioning) return;
         const rect = container.getBoundingClientRect();
-        mouseClick.x = ((e.clientX - rect.left) / rect.width) * 2 - 1; mouseClick.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        mouseClick.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouseClick.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(mouseClick, camera);
-        const intersects = raycaster.intersectObjects(unterverteilung.children, true);
-        if (intersects.length > 0) {
-            const doorG = unterverteilung.userData.doorGroup; const isOpen = unterverteilung.userData.isOpened;
-            let targetRotation = isOpen ? 0 : Math.PI * 0.65; 
-            const performOpenAnimation = () => {
-                let diff = targetRotation - doorG.rotation.y;
-                if (Math.abs(diff) > 0.001) { doorG.rotation.y += diff * 0.12; fadeHint(); requestAnimationFrame(performOpenAnimation); } else { doorG.rotation.y = targetRotation; }
-            };
-            performOpenAnimation(); unterverteilung.userData.isOpened = !isOpen;
+
+        if (activeScene === scene) {
+            // Im Technikraum: erst Garage-Tür prüfen (hat Vorrang vor UV-Klick),
+            // dann UV-Tür-Klick
+            const doorHits = raycaster.intersectObject(garageDoor, true);
+            if (doorHits.length > 0) {
+                fadeHint();
+                transitionTo('garage');
+                return;
+            }
+            const uvHits = raycaster.intersectObjects(unterverteilung.children, true);
+            if (uvHits.length > 0) {
+                const doorG = unterverteilung.userData.doorGroup;
+                const isOpen = unterverteilung.userData.isOpened;
+                let targetRotation = isOpen ? 0 : Math.PI * 0.65;
+                const performOpenAnimation = () => {
+                    let diff = targetRotation - doorG.rotation.y;
+                    if (Math.abs(diff) > 0.001) {
+                        doorG.rotation.y += diff * 0.12;
+                        fadeHint();
+                        requestAnimationFrame(performOpenAnimation);
+                    } else {
+                        doorG.rotation.y = targetRotation;
+                    }
+                };
+                performOpenAnimation();
+                unterverteilung.userData.isOpened = !isOpen;
+            }
+        } else if (activeScene === garage.scene) {
+            // In der Garage: Rück-Tür prüfen
+            const backHits = raycaster.intersectObject(garage.backDoor, true);
+            if (backHits.length > 0) {
+                fadeHint();
+                transitionTo('technikraum');
+            }
         }
     });
 
@@ -484,7 +795,7 @@ if (container) {
         animationId = requestAnimationFrame(animate);
         camera.rotation.y = yaw; camera.rotation.x = pitch;
         if (Math.abs(camera.fov - targetFOV) > 0.05) { camera.fov += (targetFOV - camera.fov) * 0.08; camera.updateProjectionMatrix(); }
-        renderer.render(scene, camera);
+        renderer.render(activeScene, camera);
     }
     
     // ─── 7) Responsive ───
