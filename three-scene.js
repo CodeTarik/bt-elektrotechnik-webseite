@@ -1008,24 +1008,38 @@ if (container) {
                 transitionTo('garage');
                 return;
             }
+            
             const uvHits = raycaster.intersectObjects(unterverteilung.children, true);
             if (uvHits.length > 0) {
+                fadeHint();
                 const doorG = unterverteilung.userData.doorGroup;
                 const isOpen = unterverteilung.userData.isOpened;
-                let targetRotation = isOpen ? 0 : Math.PI * 0.65;
-                const performOpenAnimation = () => {
-                    let diff = targetRotation - doorG.rotation.y;
-                    if (Math.abs(diff) > 0.001) {
-                        doorG.rotation.y += diff * 0.12;
-                        fadeHint();
-                        requestAnimationFrame(performOpenAnimation);
-                    } else {
-                        doorG.rotation.y = targetRotation;
-                    }
-                };
-                performOpenAnimation();
-                unterverteilung.userData.isOpened = !isOpen;
+
+                // Toggle State + neues Ziel in userData ablegen, damit
+                // eine bereits laufende Animation das neue Ziel mitbekommt
+                unterverteilung.userData.isOpened       = !isOpen;
+                unterverteilung.userData.targetRotation = isOpen ? 0 : Math.PI * 0.65;
+
+                // Nur EINE Animation pro UV gleichzeitig
+                if (!unterverteilung.userData.isAnimating) {
+                    unterverteilung.userData.isAnimating = true;
+                    const animateDoor = () => {
+                        // Ziel wird jeden Frame frisch gelesen — Klick während
+                        // Animation kann die Richtung mitten drin umlenken
+                        const target = unterverteilung.userData.targetRotation;
+                        const diff   = target - doorG.rotation.y;
+                        if (Math.abs(diff) > 0.003) {
+                            doorG.rotation.y += diff * 0.15;
+                            requestAnimationFrame(animateDoor);
+                        } else {
+                            doorG.rotation.y = target;
+                            unterverteilung.userData.isAnimating = false;
+                        }
+                    };
+                    animateDoor();
+                }
             }
+
         } else if (activeScene === garage.scene) {
             // In der Garage: Rück-Tür prüfen
             const backHits = raycaster.intersectObject(garage.backDoor, true);
