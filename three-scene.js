@@ -3,6 +3,7 @@
 // Inklusive Drag-to-look, Smooth-Zoom und Klick-Interaktion.
 
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const container = document.getElementById('three-canvas-container');
 
@@ -503,6 +504,213 @@ if (container) {
     const lampMesh = new THREE.Mesh(new THREE.CircleGeometry(0.22, 32), new THREE.MeshBasicMaterial({ color: 0xffeec8 }));
     lampMesh.position.set(0, ROOM_H - 0.005, 0); lampMesh.rotation.x = Math.PI / 2; scene.add(lampMesh);
 
+    function buildWallbox() {
+        const wb = new THREE.Group();
+
+        // Maße inspiriert vom Schneider Charge (~480×235×110mm)
+        const W = 0.11;     // Tiefe in den Raum (X)
+        const H = 0.48;     // Höhe (Y)
+        const D = 0.235;    // Breite an der Wand (Z)
+
+        // Materialien
+        const housingMat = new THREE.MeshStandardMaterial({
+            color: 0xf6f6f3, roughness: 0.32, metalness: 0.04
+        });
+        const trimMat = new THREE.MeshStandardMaterial({
+            color: 0xcecbc4, roughness: 0.45, metalness: 0.05
+        });
+        const cableMat = new THREE.MeshStandardMaterial({
+            color: 0x161616, roughness: 0.85, metalness: 0
+        });
+        const connectorMat = new THREE.MeshStandardMaterial({
+            color: 0x1a1a1a, roughness: 0.55, metalness: 0.2
+        });
+        const contactsMat = new THREE.MeshStandardMaterial({
+            color: 0xa8a8a8, roughness: 0.3, metalness: 0.85
+        });
+
+        // ── Hauptkörper ──
+        const housing = new THREE.Mesh(
+            new THREE.BoxGeometry(W, H, D), housingMat
+        );
+        housing.castShadow = true;
+        housing.receiveShadow = true;
+        wb.add(housing);
+
+        // ── Dünne Trim-Bänder oben/unten für Profil ──
+        const TT = 0.004;
+        const topT = new THREE.Mesh(
+            new THREE.BoxGeometry(W + 0.002, TT, D + 0.002), trimMat
+        );
+        topT.position.y = H/2 - TT/2;
+        wb.add(topT);
+        const botT = topT.clone();
+        botT.position.y = -H/2 + TT/2;
+        wb.add(botT);
+
+        // ── Grünes Display (Pille mit BT-Branding) ──
+        // Komplette Pille + Text auf Canvas, dann als Plane vorne aufkleben
+        const cvs = document.createElement('canvas');
+        cvs.width = 256; cvs.height = 340;
+        const c = cvs.getContext('2d');
+        c.clearRect(0, 0, 256, 340);
+
+        // Pille-Form (gerundetes Rechteck mit Halbkreis-Caps)
+        const pX = 22, pY = 26, pW = 212, pH = 288;
+        const pR = pW / 2;
+        c.fillStyle = '#52a23d';
+        c.beginPath();
+        c.moveTo(pX + pR, pY);
+        c.lineTo(pX + pW - pR, pY);
+        c.arcTo(pX + pW, pY, pX + pW, pY + pR, pR);
+        c.lineTo(pX + pW, pY + pH - pR);
+        c.arcTo(pX + pW, pY + pH, pX + pW - pR, pY + pH, pR);
+        c.lineTo(pX + pR, pY + pH);
+        c.arcTo(pX, pY + pH, pX, pY + pH - pR, pR);
+        c.lineTo(pX, pY + pR);
+        c.arcTo(pX, pY, pX + pR, pY, pR);
+        c.closePath();
+        c.fill();
+
+        // Subtiler Glanz-Verlauf für plastischen Look
+        const grad = c.createLinearGradient(pX, pY, pX + pW, pY + pH);
+        grad.addColorStop(0,   'rgba(255,255,255,0.20)');
+        grad.addColorStop(0.5, 'rgba(255,255,255,0)');
+        c.fillStyle = grad;
+        c.fill();
+
+        // Text auf der Pille
+        c.fillStyle = '#ffffff';
+        c.textAlign = 'center';
+        c.textBaseline = 'middle';
+        c.font = 'bold 28px sans-serif';
+        c.fillText('BT', 128, 135);
+        c.font = '600 16px sans-serif';
+        c.fillText('Elektrotechnik', 128, 162);
+        c.font = 'italic 24px sans-serif';
+        c.fillText('Charge', 128, 215);
+
+        const panelTex = new THREE.CanvasTexture(cvs);
+        panelTex.colorSpace = THREE.SRGBColorSpace;
+        panelTex.anisotropy = 4;
+
+        const panel = new THREE.Mesh(
+            new THREE.PlaneGeometry(D * 0.82, H * 0.62),
+            new THREE.MeshBasicMaterial({ map: panelTex, transparent: true })
+        );
+        panel.position.set(W/2 + 0.001, H * 0.08, 0);
+        panel.rotation.y = Math.PI / 2;
+        wb.add(panel);
+
+        // ── Status-LED unten links ──
+        const led = new THREE.Mesh(
+            new THREE.CircleGeometry(0.005, 16),
+            new THREE.MeshBasicMaterial({ color: 0x5cff7a })
+        );
+        led.position.set(W/2 + 0.001, -H * 0.30, -D/2 + 0.025);
+        led.rotation.y = Math.PI / 2;
+        wb.add(led);
+        const ledGlow = new THREE.Mesh(
+            new THREE.SphereGeometry(0.010, 12, 12),
+            new THREE.MeshBasicMaterial({
+                color: 0x5cff7a, transparent: true, opacity: 0.35
+            })
+        );
+        ledGlow.position.copy(led.position);
+        wb.add(ledGlow);
+
+        // ── Typ-2-Steckdose (vorne, zum Einstecken des Steckers) ──
+        const socketBg = new THREE.Mesh(
+            new THREE.CircleGeometry(0.030, 24),
+            new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.6 })
+        );
+        socketBg.position.set(W/2 + 0.001, -H * 0.32, 0);
+        socketBg.rotation.y = Math.PI / 2;
+        wb.add(socketBg);
+        const socketInner = new THREE.Mesh(
+            new THREE.CircleGeometry(0.022, 18),
+            new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.75 })
+        );
+        socketInner.position.set(W/2 + 0.002, -H * 0.32, 0);
+        socketInner.rotation.y = Math.PI / 2;
+        wb.add(socketInner);
+
+        // ── Ladekabel: hängt aus +Z-Seite oben raus, U-Bogen nach unten ──
+        const cablePoints = [
+            new THREE.Vector3(0,          H * 0.38, D/2 + 0.008),
+            new THREE.Vector3(W/2 + 0.06, H * 0.22, D/2 + 0.06),
+            new THREE.Vector3(W/2 + 0.12, H * 0.0,  D/2 + 0.08),
+            new THREE.Vector3(W/2 + 0.14, -H * 0.20, D/2 + 0.06),
+            new THREE.Vector3(W/2 + 0.12, -H * 0.42, D/2 + 0.02),
+            new THREE.Vector3(W/2 + 0.08, -H * 0.62, D/2 - 0.04),
+            new THREE.Vector3(W/2 + 0.04, -H * 0.82, D/2 - 0.09),
+            new THREE.Vector3(W/2 + 0.02, -H * 0.96, D/2 - 0.13)
+        ];
+        const cableCurve = new THREE.CatmullRomCurve3(cablePoints);
+        const cableGeo = new THREE.TubeGeometry(cableCurve, 60, 0.0095, 12, false);
+        const cable = new THREE.Mesh(cableGeo, cableMat);
+        cable.castShadow = true;
+        wb.add(cable);
+
+        // Zugentlastung am Kabel-Austritt
+        const strainRelief = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.013, 0.011, 0.025, 12),
+            connectorMat
+        );
+        strainRelief.position.set(0, H * 0.38, D/2 + 0.005);
+        wb.add(strainRelief);
+
+        // ── Typ-2-Stecker am Kabelende ──
+        const connector = new THREE.Group();
+
+        // Strain-Relief am oberen Ende (Übergang zum Kabel)
+        const sr = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.011, 0.020, 0.025, 12), connectorMat
+        );
+        sr.position.y = 0.030;
+        connector.add(sr);
+
+        // Griff (Hand-Bereich)
+        const grip = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.024, 0.022, 0.075, 16), connectorMat
+        );
+        grip.position.y = -0.020;
+        connector.add(grip);
+
+        // Steckerkopf (7-eckig = Typ-2-Look)
+        const head = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.024, 0.020, 0.040, 7), connectorMat
+        );
+        head.position.y = -0.078;
+        connector.add(head);
+
+        // Kontaktfläche im Kopf
+        const face = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.016, 0.016, 0.002, 7),
+            new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.7 })
+        );
+        face.position.y = -0.099;
+        connector.add(face);
+
+        // 3 angedeutete Kontaktstifte
+        for (let i = 0; i < 3; i++) {
+            const a = (i / 3) * Math.PI * 2;
+            const pin = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.0025, 0.0025, 0.005, 8), contactsMat
+            );
+            pin.position.set(Math.cos(a) * 0.010, -0.099, Math.sin(a) * 0.010);
+            connector.add(pin);
+        }
+
+        // Stecker ans Kabelende, leicht geneigt (wirkt wie hängend)
+        connector.position.copy(cablePoints[cablePoints.length - 1]);
+        connector.rotation.x = -Math.PI / 8;
+        connector.rotation.z = Math.PI / 12;
+        wb.add(connector);
+
+        return wb;
+    }
+
     // ─── 3b) GARAGE-SZENE als separate THREE.Scene ───
     function buildBackDoor(label) {
         // Wie die Garage-Tür, aber mit "← TECHNIKRAUM"
@@ -616,39 +824,26 @@ if (container) {
         backDoor.position.set(GW/2, 1.05, -1.0);
         gScene.add(backDoor);
 
-        // Hinweis-Plane an der WESTwand — hier kommt in Schritt 9 die Wallbox dran
-        // (für jetzt nur als visuelle Markierung, damit man weiß: hier passiert was)
-        const placeholder = new THREE.Mesh(
-            new THREE.PlaneGeometry(0.5, 0.7),
-            new THREE.MeshBasicMaterial({
-                color: 0x1c1612, transparent: true, opacity: 0.6
-            })
-        );
-        placeholder.position.set(-GW/2 + 0.005, 1.2, -0.5);
-        placeholder.rotation.y = Math.PI / 2;
-        gScene.add(placeholder);
-
-        // Beschriftung "WALLBOX · folgt" mittig auf dem Platzhalter
-        const phCvs = document.createElement('canvas');
-        phCvs.width = 256; phCvs.height = 96;
-        const phCtx = phCvs.getContext('2d');
-        phCtx.fillStyle = 'rgba(0,0,0,0)'; phCtx.fillRect(0, 0, 256, 96);
-        phCtx.fillStyle = '#F5A623';
-        phCtx.font = 'bold 26px sans-serif';
-        phCtx.textAlign = 'center'; phCtx.textBaseline = 'middle';
-        phCtx.fillText('WALLBOX', 128, 38);
-        phCtx.font = 'bold 14px sans-serif';
-        phCtx.fillStyle = '#aaa';
-        phCtx.fillText('folgt in Schritt 9', 128, 64);
-        const phTex = new THREE.CanvasTexture(phCvs);
-        phTex.colorSpace = THREE.SRGBColorSpace;
-        const phLbl = new THREE.Mesh(
-            new THREE.PlaneGeometry(0.35, 0.13),
-            new THREE.MeshBasicMaterial({ map: phTex, transparent: true })
-        );
-        phLbl.position.set(-GW/2 + 0.01, 1.2, -0.5);
-        phLbl.rotation.y = Math.PI / 2;
-        gScene.add(phLbl);
+       // ── Wallbox (Blender-Modell statt prozeduraler Variante) ──
+        // Procedural fallback buildWallbox() bleibt im Code erhalten, wird hier nur nicht mehr aufgerufen.
+        const wallboxLoader = new GLTFLoader();
+        wallboxLoader.load('./assets/wallbox.glb', (gltf) => {
+            // Front-Face zeigt jetzt nach +X (in den Raum). In Blender war die Vorderseite
+            // auf +Y; nach +Y-Hoch-Export ist sie -Z; mit -90° um Y dreht sie auf +X.
+            gltf.scene.rotation.y = -Math.PI / 2;
+            // Y = Unterkante (Modell-Origin sitzt an der Bottom-Center-Linie in Blender).
+            // 1.25 (Center alte prozedurale Version) − 0.24 (halbe Höhe) = 1.01.
+            gltf.scene.position.set(-GW/2 + 0.055, 1.01, -0.5);
+            gltf.scene.traverse((child) => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+            gScene.add(gltf.scene);
+        }, undefined, (err) => {
+            console.error('Wallbox GLB konnte nicht geladen werden:', err);
+        });
 
         return { scene: gScene, backDoor };
     }
