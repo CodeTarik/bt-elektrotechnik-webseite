@@ -828,11 +828,7 @@ if (container) {
         // Procedural fallback buildWallbox() bleibt im Code erhalten, wird hier nur nicht mehr aufgerufen.
         const wallboxLoader = new GLTFLoader();
         wallboxLoader.load('./assets/wallbox.glb', (gltf) => {
-            // Front-Face zeigt jetzt nach +X (in den Raum). In Blender war die Vorderseite
-            // auf +Y; nach +Y-Hoch-Export ist sie -Z; mit -90° um Y dreht sie auf +X.
             gltf.scene.rotation.y = -Math.PI / 2;
-            // Y = Unterkante (Modell-Origin sitzt an der Bottom-Center-Linie in Blender).
-            // 1.25 (Center alte prozedurale Version) − 0.24 (halbe Höhe) = 1.01.
             gltf.scene.position.set(-GW/2 + 0.055, 1.01, -0.5);
             gltf.scene.traverse((child) => {
                 if (child.isMesh) {
@@ -840,6 +836,66 @@ if (container) {
                     child.receiveShadow = true;
                 }
             });
+
+            // ── BT-Charge-Branding auf grüne Pille ──
+            const logoCvs = document.createElement('canvas');
+            logoCvs.width = 512; logoCvs.height = 880;   // doppelte Auflösung → mehr Schärfe
+            const lc = logoCvs.getContext('2d');
+            lc.textAlign = 'center';
+            lc.textBaseline = 'middle';
+
+            // Dezenter heller Glow → hebt den anthrazitfarbenen Text
+            // vom grünen Hintergrund leicht ab (wirkt wie eingraviert/erhaben)
+            lc.shadowColor   = 'rgba(255, 255, 255, 0.35)';
+            lc.shadowBlur    = 8;
+            lc.shadowOffsetY = 0;
+
+            // Anthrazit (identisch zum Hager-Frame in deiner UV)
+            const anthrazit = '#2b2c2c';
+
+            // "BT" — groß und fett
+            lc.fillStyle = anthrazit;
+            lc.font = 'bold 140px sans-serif';
+            lc.fillText('BT', 256, 280);
+
+
+            // "Elektrotechnik" — schmaler, drunter
+            lc.font = '600 56px sans-serif';
+            lc.fillText('Elektrotechnik', 256, 380);
+
+            // Trenn-Linie in Anthrazit (ohne Glow für saubere Kante)
+            lc.shadowBlur = 0;
+            lc.fillStyle  = anthrazit;
+            lc.fillRect(140, 460, 232, 4);
+
+            // "Charge" — italic, prominent
+            lc.shadowColor   = 'rgba(255, 255, 255, 0.35)';
+            lc.shadowBlur    = 8;
+            lc.fillStyle     = anthrazit;
+            lc.font = 'italic bold 110px sans-serif';
+            lc.fillText('Charge', 256, 600);
+
+            const logoTex = new THREE.CanvasTexture(logoCvs);
+            logoTex.colorSpace = THREE.SRGBColorSpace;
+            logoTex.anisotropy = 16;
+
+            const logoPlane = new THREE.Mesh(
+                new THREE.PlaneGeometry(0.14, 0.24),
+                new THREE.MeshBasicMaterial({
+                    map: logoTex, transparent: true
+                })
+            );
+            logoPlane.position.set(0, 0.30, -0.067);
+            logoPlane.rotation.y = Math.PI;
+            gltf.scene.add(logoPlane);
+
+            // Position im LOKALEN Koordinatensystem des Blender-Modells
+            // (vor der Rotation um Y). Pille liegt bei (0, 0.3, -0.06),
+            // wir setzen den Logo-Plane minimal davor (Z noch weiter negativ).
+            logoPlane.position.set(0, 0.30, -0.067);
+            logoPlane.rotation.y = Math.PI;   // Plane-Normale auf -Z drehen
+            gltf.scene.add(logoPlane);
+
             gScene.add(gltf.scene);
         }, undefined, (err) => {
             console.error('Wallbox GLB konnte nicht geladen werden:', err);
