@@ -974,7 +974,14 @@ if (container) {
 
     // ─── 4b) Smooth Zoom-Funktion (Mausrad & Touch-Pinch) ───
     let targetFOV = 72; const MIN_FOV = 20; const MAX_FOV = 72;
-    container.addEventListener('wheel', (e) => { e.preventDefault(); targetFOV += e.deltaY * 0.05; targetFOV = Math.max(MIN_FOV, Math.min(MAX_FOV, targetFOV)); }, { passive: false });
+    
+    container.addEventListener('wheel', (e) => {
+        // Ohne Strg/Cmd: Page-Scroll durchlassen (nicht abfangen)
+        if (!e.ctrlKey && !e.metaKey) return;
+        e.preventDefault();
+        targetFOV += e.deltaY * 0.05;
+        targetFOV = Math.max(MIN_FOV, Math.min(MAX_FOV, targetFOV));
+    }, { passive: false });
 
     let initialPinchDistance = null; let initialFOV = targetFOV;
     container.addEventListener('touchstart', (e) => { if (e.touches.length === 2) { const dx = e.touches[0].clientX - e.touches[1].clientX; const dy = e.touches[0].clientY - e.touches[1].clientY; initialPinchDistance = Math.hypot(dx, dy); initialFOV = targetFOV; } }, { passive: false });
@@ -983,7 +990,7 @@ if (container) {
 
     // ─── 5) Bedienhinweis ───
     const hint = document.createElement('div');
-    hint.textContent = '✋ Ziehen zum Umsehen | 🔍 Scrollen zum Zoomen';
+    hint.textContent = '✋ Ziehen zum Umsehen | 🔍 Strg + Scrollen zum Zoomen';
     hint.style.cssText = `position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: #F5A623; padding: 8px 18px; border: 1px solid rgba(245,166,35,0.5); border-radius: 999px; font: 700 0.7rem/1 system-ui, sans-serif; letter-spacing: 0.15em; text-transform: uppercase; pointer-events: none; box-shadow: 0 4px 16px rgba(0,0,0,0.5); transition: opacity 0.6s ease; z-index: 10;`;
     container.appendChild(hint);
     let hasInteracted = false;
