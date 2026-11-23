@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <title>KNX Gebäudeautomation Hameln | BT Elektrotechnik</title>
+    <meta name="description" content="KNX Gebäudeautomation in Hameln und Umgebung – intelligente Steuerung von Licht, Beschattung, Heizung, Szenen und zentraler Bedienung durch BT Elektrotechnik.">
+    <link rel="canonical" href="https://bt-elektrotech.de/knx-gebaeudeautomation-hameln/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bt-elektrotech.de/knx-gebaeudeautomation-hameln/">
+    <meta property="og:title" content="KNX Gebäudeautomation Hameln | BT Elektrotechnik">
+    <meta property="og:description" content="KNX-Gebäudeautomation in Hameln und Umgebung für Licht, Beschattung, Heizung, Szenen und moderne Gebäudesteuerung.">
+    <meta property="og:image" content="https://bt-elektrotech.de/images/bt_elektrotechnik_logo_final.png">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:site_name" content="BT Elektrotechnik">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "KNX Gebäudeautomation in Hameln",
+      "serviceType": "KNX Gebäudeautomation",
+      "provider": {
+        "@type": "ElectricalContractor",
+        "name": "BT Elektrotechnik",
+        "url": "https://bt-elektrotech.de/",
+        "telephone": "+49-160-96777430",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Süntelstraße 55",
+          "addressLocality": "Hameln",
+          "postalCode": "31785",
+          "addressCountry": "DE"
+        }
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Hameln"
+      },
+      "url": "https://bt-elektrotech.de/knx-gebaeudeautomation-hameln/"
+    }
+    </script>
+
+    <link rel="icon" type="image/png" href="../images/netzstecker.png">
+    <link rel="stylesheet" href="../dist/tailwind.css?v=1">
+    <link rel="stylesheet" href="../style.css?v=14">
+
+    <style>
+        .service-page { background:#fff; color:#1f2937; }
+        .service-shell { width:min(1180px, calc(100% - 40px)); margin:0 auto; }
+        .service-hero {
+            position:relative; overflow:hidden; padding:150px 0 92px;
+            background:radial-gradient(circle at 85% 20%, rgba(245,158,11,.12), transparent 28%),
+                       linear-gradient(135deg,#171717 0%,#242424 58%,#1d1d1d 100%);
+            color:#fff;
+        }
+        .service-hero::after {
+            content:""; position:absolute; right:-120px; bottom:-180px; width:420px; height:420px;
+            border:1px solid rgba(245,158,11,.18); border-radius:50%;
+        }
+        .service-kicker,.section-kicker {
+            display:inline-flex; align-items:center; gap:12px; color:#f59e0b;
+            font-size:12px; font-weight:800; letter-spacing:.18em; text-transform:uppercase;
+        }
+        .service-kicker::before,.section-kicker::before {
+            content:""; width:42px; height:2px; background:#f59e0b;
+        }
+        .service-hero h1 {
+            margin:22px 0 26px; max-width:900px; font-size:clamp(48px,7vw,88px);
+            line-height:.96; font-weight:900; font-style:italic; text-transform:uppercase;
+            letter-spacing:-.02em;
+        }
+        .service-hero h1 span { color:#f59e0b; }
+        .service-hero p {
+            max-width:790px; margin:0; color:#d1d5db; font-size:19px; line-height:1.75;
+        }
+        .hero-actions { display:flex; flex-wrap:wrap; gap:14px; margin-top:34px; }
+        .service-btn {
+            display:inline-flex; align-items:center; justify-content:center; min-height:50px;
+            padding:0 26px; border-radius:999px; font-size:13px; font-weight:800;
+            text-transform:uppercase; text-decoration:none; transition:.2s ease;
+        }
+        .service-btn-primary { background:#f59e0b; color:#fff; }
+        .service-btn-primary:hover { background:#fff; color:#171717; }
+        .service-btn-secondary { border:1px solid rgba(255,255,255,.22); color:#fff; }
+        .service-btn-secondary:hover { background:rgba(255,255,255,.08); }
+
+        .service-section { padding:92px 0; }
+        .service-section.soft { background:#f8fafc; }
+        .service-intro-grid {
+            display:grid; grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);
+            gap:128px; align-items:start;
+        }
+        .service-copy h2,.process-head h2,.service-cta h2 {
+            margin:18px 0 24px; font-size:clamp(31px,3.4vw,44px); line-height:1.04;
+            font-weight:900; font-style:italic; text-transform:uppercase;
+            letter-spacing:-.02em; color:#202020;
+        }
+        .service-copy h2 span,.process-head h2 span { color:#f59e0b; }
+        .service-copy h2 { max-width: 580px; }
+        .service-copy { min-width: 0; }
+
+        .service-copy p { margin:0 0 20px; color:#64748b; font-size:17px; line-height:1.8; }
+
+        .service-card-dark {
+            background:#202020; border:1px solid rgba(245,158,11,.28); border-radius:30px;
+            padding:34px; box-shadow:0 24px 60px rgba(15,23,42,.12);
+        }
+        .service-card-dark > strong {
+            display:block; color:#f59e0b; font-size:12px; font-weight:800;
+            letter-spacing:.18em; text-transform:uppercase; margin-bottom:22px;
+        }
+        .service-list { display:grid; gap:14px; }
+        .service-list-item {
+            display:grid; grid-template-columns:28px 1fr; gap:12px; padding:14px 0;
+            border-bottom:1px solid rgba(255,255,255,.08);
+        }
+        .service-list-item:last-child { border-bottom:0; }
+        .service-list-item .check { color:#f59e0b; font-weight:900; font-size:18px; }
+        .service-list-item h3 {
+            margin:0 0 5px; color:#fff; font-size:15px; font-weight:800;
+            text-transform:uppercase; letter-spacing:.04em;
+        }
+        .service-list-item p { margin:0; color:#aeb6c2; font-size:14px; line-height:1.6; }
+
+        .process-head { max-width:840px; margin-bottom:46px; }
+        .process-grid {
+            display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:22px;
+        }
+        .process-card {
+            background:#fff; border:1px solid #e5e7eb; border-radius:26px; padding:30px;
+            min-height:250px; box-shadow:0 8px 28px rgba(15,23,42,.04);
+        }
+        .process-number { color:#f59e0b; font-size:38px; font-weight:900; line-height:1; margin-bottom:22px; }
+        .process-card h3 {
+            margin:0 0 13px; color:#202020; font-size:23px; font-weight:900; text-transform:uppercase;
+        }
+        .process-card p { margin:0; color:#64748b; font-size:15px; line-height:1.75; }
+
+        .trust-grid {
+            display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px;
+        }
+        .trust-card {
+            border:1px solid #e5e7eb; border-radius:24px; padding:30px 24px;
+            text-align:center; background:#fff;
+        }
+        .trust-card strong { display:block; color:#f59e0b; font-size:36px; font-weight:900; }
+        .trust-card span {
+            display:block; margin-top:10px; color:#64748b; font-size:14px; line-height:1.55;
+        }
+
+        .service-cta-wrap { padding:0 0 96px; }
+        .service-cta {
+            background:#202020; color:#fff; border:1px solid rgba(245,158,11,.28);
+            border-radius:34px; padding:54px 46px; text-align:center;
+            box-shadow:0 24px 60px rgba(15,23,42,.12);
+        }
+        .service-cta h2 { color:#fff; margin-top:14px; }
+        .service-cta p {
+            max-width:720px; margin:0 auto 30px; color:#cbd5e1; font-size:16px; line-height:1.75;
+        }
+
+        @media (max-width:900px) {
+            .service-hero { padding-top:130px; }
+            .service-intro-grid,.process-grid,.trust-grid { grid-template-columns:1fr; }
+            .service-intro-grid { gap:54px; }
+        }
+        @media (max-width:640px) {
+            .service-shell { width:min(100% - 28px,1180px); }
+            .service-hero { padding:118px 0 68px; }
+            .service-hero h1 { font-size:46px; }
+            .service-hero p { font-size:17px; }
+            .service-section { padding:70px 0; }
+            .service-card-dark,.process-card,.trust-card { border-radius:22px; }
+            .service-cta { border-radius:26px; padding:40px 24px; }
+        }
+    </style>
+
+</head>
+
+<body class="service-page">
+<nav class="site-navbar">
+  <div class="site-navbar-inner">
+    <a href="../" class="site-navbar-logo" aria-label="BT Elektrotechnik Startseite">
+      <img src="../images/bt_elektrotechnik_logo_final.png" alt="BT Elektrotechnik Logo">
+    </a>
+    <div class="site-navbar-links" id="nav-links">
+      <a href="../#leistungen">Leistungen</a>
+      <a href="../#ueber-uns">Über uns</a>
+      <a href="../#kontakt">Kontakt</a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<main>
+  <section class="service-hero">
+    <div class="service-shell">
+      <div class="service-kicker">KNX · Gebäudeautomation · Hameln</div>
+      <h1>KNX Gebäudeautomation<br><span>in Hameln</span></h1>
+      <p>Fachgerechte Elektroinstallationen für Neubau, Sanierung, Modernisierung und Gewerbe.
+      Von der Bestandsaufnahme über Schutzorgane und Unterverteilungen bis zur fertigen Installation
+      erhalten Sie eine saubere, sichere und nachvollziehbare Ausführung.</p>
+      <div class="hero-actions">
+        <a href="../#kontakt" class="service-btn service-btn-primary">Projekt anfragen</a>
+        <a href="../#leistungen" class="service-btn service-btn-secondary">Weitere Leistungen</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="service-section">
+    <div class="service-shell service-intro-grid">
+      <div class="service-copy">
+        <div class="section-kicker">KNX-Leistungsumfang</div>
+        <h2>Intelligente Gebäudetechnik für <span>Komfort und Effizienz</span></h2>
+        <p>BT Elektrotechnik übernimmt Elektroinstallationen in Hameln und Umgebung für private,
+        gewerbliche und modernisierte Gebäude. Im Mittelpunkt stehen eine fachgerechte Ausführung,
+        eine klare Struktur der Anlage und eine Lösung, die zur tatsächlichen Nutzung des Gebäudes passt.</p>
+        <p>Bestehende Installationen werden vor Erweiterungen oder Umbauten technisch betrachtet,
+        damit neue Stromkreise, Schutzorgane und Verteilungen sinnvoll in die vorhandene Anlage integriert werden können.</p>
+      </div>
+
+      <aside class="service-card-dark">
+        <strong>Typische Leistungen</strong>
+        <div class="service-list">
+          <div class="service-list-item"><span class="check">✓</span><div><h3>Lichtsteuerung</h3><p>Schalten, Dimmen und Szenen für Wohn- und Arbeitsbereiche.</p></div></div>
+          <div class="service-list-item"><span class="check">✓</span><div><h3>Beschattung</h3><p>Automatische oder manuelle Steuerung von Jalousien und Raffstores.</p></div></div>
+          <div class="service-list-item"><span class="check">✓</span><div><h3>Heizung & Raumklima</h3><p>Einbindung von Raumtemperaturregelung und komfortorientierten Funktionen.</p></div></div>
+          <div class="service-list-item"><span class="check">✓</span><div><h3>Visualisierung & Szenen</h3><p>Zentrale Bedienung, Statusanzeigen und individuell definierte Abläufe.</p></div></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="service-section soft">
+    <div class="service-shell">
+      <div class="process-head">
+        <div class="section-kicker">Projektablauf</div>
+        <h2>Von der Anforderung bis zur <span>KNX-Inbetriebnahme</span></h2>
+      </div>
+      <div class="process-grid">
+        <article class="process-card">
+          <div class="process-number">01</div>
+          <h3>Anforderungen klären</h3>
+          <p>Gewünschte Funktionen, Räume, Bedienkonzept und spätere Erweiterungen werden vor der Umsetzung gemeinsam festgelegt.</p>
+        </article>
+        <article class="process-card">
+          <div class="process-number">02</div>
+          <h3>Planen & Parametrieren</h3>
+          <p>KNX-Komponenten, Gruppenadressen und Funktionen werden strukturiert geplant, programmiert und aufeinander abgestimmt.</p>
+        </article>
+        <article class="process-card">
+          <div class="process-number">03</div>
+          <h3>Testen & Übergeben</h3>
+          <p>Die Funktionen werden getestet, Bedienabläufe geprüft und die Anlage anschließend nachvollziehbar in Betrieb genommen und übergeben.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="service-section">
+    <div class="service-shell trust-grid">
+      <div class="trust-card"><strong>Meister</strong><span>Elektrotechnikermeister / Bachelor Professional</span></div>
+      <div class="trust-card"><strong>KNX</strong><span>Fokus auf intelligente Gebäudeautomation und flexible Steuerung</span></div>
+      <div class="trust-card"><strong>13+</strong><span>Jahre Erfahrung in Energie- und Gebäudetechnik</span></div>
+    </div>
+  </section>
+
+  <section class="service-cta-wrap">
+    <div class="service-shell">
+      <div class="service-cta">
+        <div class="section-kicker">BT Elektrotechnik · Hameln</div>
+        <h2>KNX-Projekt in Hameln geplant?</h2>
+        <p>Beschreiben Sie kurz Ihr Vorhaben. Anschließend kann geklärt werden, welche Ausführung,
+        Vorbereitung und technische Abstimmung für Ihr Projekt sinnvoll ist.</p>
+        <a href="../#kontakt" class="service-btn service-btn-primary">Kontakt aufnehmen</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bg-dark py-12 text-center text-gray-500 text-[10px] uppercase tracking-widest border-t border-white/5">
+  <div>
+    <p>&copy; 2026 BT Elektrotechnik Hameln. Inhaber Tarik Bozüslü.</p>
+    <div class="flex items-center justify-center gap-6 mt-3">
+      <a href="../impressum.html" class="hover:text-gold transition-colors">Impressum</a>
+      <span aria-hidden="true">·</span>
+      <a href="../datenschutz.html" class="hover:text-gold transition-colors">Datenschutz</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js?v=10" defer></script>
+</body>
+</html>
