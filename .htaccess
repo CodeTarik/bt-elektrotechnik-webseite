@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Alles auf HTTPS und ohne www weiterleiten
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\.bt-elektrotech\.de$ [NC]
+RewriteRule ^(.*)$ https://bt-elektrotech.de/$1 [R=301,L]

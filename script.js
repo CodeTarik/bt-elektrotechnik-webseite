@@ -1,82 +1,102 @@
 const COOKIE_STORAGE_KEY = 'btPrivacyChoice';
-const INTRO_STORAGE_KEY = 'lightIsOn';
+const INTRO_STORAGE_KEY  = 'btPanelIntroSeen';
 
-const lightOverlay = document.getElementById('light-overlay');
-const lightSwitch = document.getElementById('light-switch');
-const pullStartButton = document.getElementById('pull-start-button');
-
-const cookieBanner = document.getElementById('cookie-banner');
+const lightOverlay         = document.getElementById('light-overlay');
+const lightSwitch          = document.getElementById('light-switch');
+const pullStartButton      = document.getElementById('pull-start-button');
+const cookieBanner         = document.getElementById('cookie-banner');
 const cookieNecessaryButton = document.getElementById('cookie-necessary');
-const cookieComfortButton = document.getElementById('cookie-comfort');
+const cookieComfortButton  = document.getElementById('cookie-comfort');
+const panelCurrentTime     = document.getElementById('panel-current-time');
+const panelCurrentDate     = document.getElementById('panel-current-date');
 
-const privacyChoice = localStorage.getItem(COOKIE_STORAGE_KEY);
+const privacyChoice  = localStorage.getItem(COOKIE_STORAGE_KEY);
 const comfortAllowed = privacyChoice === 'comfort';
 
-const lampWirePath = document.querySelector('.lamp-wire-path');
+/* ── Scroll-Lock ─────────────────────────────────────── */
+const lockPageScroll = () => {
+    document.documentElement.classList.add('overlay-open');
+    document.body.classList.add('overlay-open');
+};
 
+const unlockPageScroll = () => {
+    document.documentElement.classList.remove('overlay-open');
+    document.body.classList.remove('overlay-open');
+};
+
+/* ── Panel-Uhrzeit ───────────────────────────────────── */
+const updatePanelTime = () => {
+    const now = new Date();
+    if (panelCurrentTime) {
+        panelCurrentTime.textContent = now.toLocaleTimeString('de-DE', {
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+    if (panelCurrentDate) {
+        panelCurrentDate.textContent = now.toLocaleDateString('de-DE', {
+            day: '2-digit', month: '2-digit', year: 'numeric'
+        });
+    }
+};
+
+updatePanelTime();
+setInterval(updatePanelTime, 1000);
+
+/* ── Overlay Scroll-Lock aktiv solange Overlay sichtbar ─ */
+if (lightOverlay) {
+    lockPageScroll();
+}
+
+/* ── Cookie-Banner ───────────────────────────────────── */
 if (!privacyChoice && cookieBanner) {
     cookieBanner.classList.add('is-visible');
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            cookieBanner.classList.add('is-animated');
+        });
+    });
 }
+
+const hideCookieBanner = () => {
+    if (!cookieBanner) return;
+    cookieBanner.classList.remove('is-animated');
+    cookieBanner.addEventListener('transitionend', () => {
+        cookieBanner.classList.remove('is-visible');
+    }, { once: true });
+};
 
 if (cookieNecessaryButton) {
     cookieNecessaryButton.addEventListener('click', () => {
         localStorage.setItem(COOKIE_STORAGE_KEY, 'necessary');
         sessionStorage.removeItem(INTRO_STORAGE_KEY);
-
-        if (cookieBanner) {
-            cookieBanner.classList.remove('is-visible');
-        }
+        hideCookieBanner();
     });
 }
 
 if (cookieComfortButton) {
     cookieComfortButton.addEventListener('click', () => {
         localStorage.setItem(COOKIE_STORAGE_KEY, 'comfort');
-
-        if (cookieBanner) {
-            cookieBanner.classList.remove('is-visible');
-        }
+        hideCookieBanner();
     });
 }
 
-/* Intro nur automatisch überspringen, wenn Komfort erlaubt wurde */
+/* ── Intro automatisch überspringen (Komfort-Modus) ──── */
 if (comfortAllowed && sessionStorage.getItem(INTRO_STORAGE_KEY) === 'true') {
     if (lightOverlay) {
         lightOverlay.style.display = 'none';
+        unlockPageScroll();
     }
 }
 
-if (lightSwitch && lightOverlay) {
+/* ── KNX Panel Intro ─────────────────────────────────── */
+if (lightOverlay) {
     let isAnimating = false;
 
-
-    function animateLampWire() {
-    if (!lampWirePath) return;
-
-    const frames = [
-        'M60 0 C60 90 60 180 60 330',
-        'M60 0 C70 95 82 190 74 330',
-        'M60 0 C50 95 38 190 46 330',
-        'M60 0 C66 92 72 186 68 330',
-        'M60 0 C56 92 50 186 54 330',
-        'M60 0 C60 90 60 180 60 330'
-    ];
-
-    const timings = [0, 170, 340, 520, 700, 900];
-
-    frames.forEach((d, index) => {
-        setTimeout(() => {
-            lampWirePath.setAttribute('d', d);
-        }, timings[index]);
-    });
-}
-
-    const triggerLightIntro = () => {
+    const triggerPanelIntro = () => {
         if (isAnimating) return;
         isAnimating = true;
 
         lightOverlay.classList.add('active-animation');
-        animateLampWire();                                              //am 20.05.2026 eingefügt
 
         if (localStorage.getItem(COOKIE_STORAGE_KEY) === 'comfort') {
             sessionStorage.setItem(INTRO_STORAGE_KEY, 'true');
@@ -84,38 +104,127 @@ if (lightSwitch && lightOverlay) {
 
         setTimeout(() => {
             lightOverlay.classList.add('light-on');
-        }, 1450);
+        }, 1300);
 
         setTimeout(() => {
             lightOverlay.style.display = 'none';
-        }, 2450);
+            unlockPageScroll();
+        }, 2250);
     };
 
-    lightSwitch.addEventListener('click', triggerLightIntro);
-
-    if (pullStartButton) {
-        pullStartButton.addEventListener('click', triggerLightIntro);
+    /* Desktop: Panel-Device klickbar */
+    if (lightSwitch) {
+        lightSwitch.addEventListener('click', triggerPanelIntro);
+        lightSwitch.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                triggerPanelIntro();
+            }
+        });
     }
 
-    lightSwitch.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            triggerLightIntro();
-        }
-    });
-}
+    /* Desktop: Text-Button */
+    if (pullStartButton) {
+        pullStartButton.addEventListener('click', triggerPanelIntro);
+        pullStartButton.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                triggerPanelIntro();
+            }
+        });
+    }
 
-/* Reveal Animation */
-const reveals = document.querySelectorAll('.reveal');
+    /* Mobile: CTA-Button */
+    const pullStartMobile = document.getElementById('pull-start-mobile');
+    if (pullStartMobile) {
+        pullStartMobile.addEventListener('click', triggerPanelIntro);
+    }
+} /* ← schließt if (lightOverlay) */
 
+/* ── Reveal Animation ────────────────────────────────── */
+const reveals  = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('active');
         }
     });
-}, {
-    threshold: 0.15
-});
+}, { threshold: 0.15 });
 
 reveals.forEach(el => observer.observe(el));
+
+/* ── Mobile Hamburger Menu ───────────────────────────── */
+const navToggle = document.getElementById('nav-toggle');
+const navLinks  = document.getElementById('nav-links');
+
+if (navToggle && navLinks) {
+    const openLabel  = 'Menü öffnen';
+    const closeLabel = 'Menü schließen';
+
+    navToggle.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('is-open');
+        navToggle.classList.toggle('is-open', isOpen);
+        navToggle.setAttribute('aria-expanded', String(isOpen));
+        navToggle.setAttribute('aria-label', isOpen ? closeLabel : openLabel);
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('is-open');
+            navToggle.classList.remove('is-open');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggle.setAttribute('aria-label', openLabel);
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+            navLinks.classList.remove('is-open');
+            navToggle.classList.remove('is-open');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggle.setAttribute('aria-label', openLabel);
+        }
+    });
+}
+
+/* ── AJAX Kontaktformular ────────────────────────────── */
+const contactForm   = document.getElementById('contact-form');
+const contactSubmit = document.getElementById('contact-submit');
+const formSuccess   = document.getElementById('form-success');
+const formError     = document.getElementById('form-error');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (contactSubmit) {
+            contactSubmit.disabled    = true;
+            contactSubmit.textContent = 'Wird gesendet …';
+        }
+
+        if (formSuccess) formSuccess.classList.add('hidden');
+        if (formError)   formError.classList.add('hidden');
+
+        try {
+            const response = await fetch(contactForm.action, {
+                method:  'POST',
+                body:    new FormData(contactForm),
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                contactForm.reset();
+                if (contactSubmit) contactSubmit.style.display = 'none';
+                if (formSuccess)   formSuccess.classList.remove('hidden');
+            } else {
+                throw new Error('Serverfehler');
+            }
+        } catch {
+            if (formError) formError.classList.remove('hidden');
+            if (contactSubmit) {
+                contactSubmit.disabled    = false;
+                contactSubmit.textContent = 'Nachricht senden';
+            }
+        }
+    });
+}

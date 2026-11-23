@@ -2,114 +2,314 @@
 <html lang="de" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BT Elektrotechnik | Elektroinstallation & Smart Home Hameln</title>
-    <meta name="description" content="BT Elektrotechnik in Hameln – Ihr Spezialist für Elektroinstallation, Gebäudeautomation und E-Mobility.">
-    
-    <link rel="icon" type="image/png" href="./images/netzstecker.png">
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
+    <title>Elektriker Hameln | Elektroinstallation & KNX | BT Elektrotechnik</title>
+    <meta name="description" content="BT Elektrotechnik – Ihr Elektrotechnikermeister in Hameln für Elektroinstallation, KNX-Gebäudeautomation, Wallboxen, Elektroplanung und Prüfungen.">
+    <link rel="canonical" href="https://bt-elektrotech.de/">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bt-elektrotech.de/">
+    <meta property="og:title" content="Elektriker Hameln | Elektroinstallation & KNX | BT Elektrotechnik">
+    <meta property="og:description" content="Elektroinstallation, KNX-Gebäudeautomation, Wallboxen, Elektroplanung und Prüfungen in Hameln und Umgebung.">
+    <meta property="og:image" content="https://bt-elektrotech.de/images/bt_elektrotechnik_logo_final.png">
+    <meta property="og:image:alt" content="BT Elektrotechnik – Elektrotechnik in Hameln">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:site_name" content="BT Elektrotechnik">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Elektriker Hameln | BT Elektrotechnik">
+    <meta name="twitter:description" content="Elektroinstallation, KNX-Gebäudeautomation, Wallboxen und Elektroplanung in Hameln und Umgebung.">
+    <meta name="twitter:image" content="https://bt-elektrotech.de/images/bt_elektrotechnik_logo_final.png">
+
+    <!-- Privacy-friendly analytics by Plausible -->
+    <script async src="https://plausible.io/js/pa-6pjF9udEqeE5Z4zTgug_J.js"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold: '#F5A623',
-                        dark: '#1C1C1C',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        condensed: ['Barlow Condensed', 'sans-serif'],
-                    }
-                }
-            }
-        }
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
     </script>
 
-    
-    <link rel="stylesheet" href="./style.css?v=5">
+    <!-- Structured Data: LocalBusiness -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ElectricalContractor",
+      "name": "BT Elektrotechnik",
+      "description": "Elektrotechnikermeister in Hameln für Elektroinstallation, KNX-Gebäudeautomation, Wallboxen, Elektroplanung und Prüfungen.",
+      "url": "https://bt-elektrotech.de/",
+      "telephone": "+49-160-96777430",
+      "email": "info@btelektrotechnik.net",
+      "image": "https://bt-elektrotech.de/images/bt_elektrotechnik_logo_final.png",
+      "priceRange": "€€",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Süntelstraße 55",
+        "addressLocality": "Hameln",
+        "postalCode": "31785",
+        "addressCountry": "DE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 52.1077,
+        "longitude": 9.3562
+      },
+      "areaServed": {
+        "@type": "GeoCircle",
+        "geoMidpoint": {
+          "@type": "GeoCoordinates",
+          "latitude": 52.1077,
+          "longitude": 9.3562
+        },
+        "geoRadius": "50000"
+      }
+    }
+    </script>
 
+    <link rel="icon" type="image/png" href="./images/netzstecker.png">
+    <link rel="stylesheet" href="./dist/tailwind.css?v=1">
+    <link rel="stylesheet" href="./style.css?v=14">
+    <link rel="stylesheet" href="./news.css?v=1">
 
+    <style>
+        .service-more-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 11px 18px;
+            border: 1px solid #f59e0b;
+            border-radius: 999px;
+            color: #f59e0b;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .service-more-link:hover {
+            background: #f59e0b;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .service-card-dark .service-more-link {
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+
+        .service-card-dark .service-more-link:hover {
+            background: #f59e0b;
+            color: #171717;
+        }
+    </style>
 
 </head>
 
 <body class="bg-white font-sans text-dark leading-relaxed">
 
    
-    <!-- LIGHT INTRO OVERLAY -->
-    <div id="light-overlay">
-    <div class="intro-inner">
+<!-- KNX VISUALIZATION PANEL INTRO OVERLAY -->
+    <div id="light-overlay" class="panel-overlay">
+        <div class="panel-overlay-grid" aria-hidden="true"></div>
+        <div class="panel-overlay-glow" aria-hidden="true"></div>
 
-        <div class="intro-left">
-            <div class="intro-step">Meisterbetrieb Hameln</div>
-            <h2>Licht an<br>für Ihr Projekt.</h2>
-            <p>Ein kurzer Zug - und intelligente Elektrotechnik wird erlebbar.</p>
+        <div class="overlay-brand">
+            <img src="./images/bt_elektrotechnik_logo_final.png" alt="BT Elektrotechnik Logo">
+         <span>Gebäudeautomation · Elektrotechnik · KNX</span>
+        </div>
 
+        <div class="panel-intro-inner">
 
-            <div class="pull-start" id="pull-start-button" aria-hidden="true">
-                <div class="pull-icon"></div>
-                <span>Licht Einschalten→</span>
+        <div class="panel-intro-text">
+            <div class="intro-step">Gebäudeautomation / KNX</div>
+
+            <h2>
+                Moderne<br>
+                Elektrotechnik<br>
+                erleben.
+            </h2>
+
+            <p>
+                Willkommen bei BT Elektrotechnik. Entdecken Sie fachgerechte Elektroinstallation,
+                intelligente Gebäudeautomation und moderne Lösungen für Ihr Projekt.
+            </p>
+
+            <div class="panel-start-button" id="pull-start-button" role="button" tabindex="0" aria-label="Website öffnen">
+                <span></span>
+                <strong>Website öffnen</strong>
             </div>
         </div>
 
-        <div class="intro-stage">
-            <div class="lamp-system" id="light-switch" aria-label="Licht einschalten" role="button" tabindex="0">
-                <svg class="lamp-wire" viewBox="0 0 120 330" aria-hidden="true">
-                    <path class="lamp-wire-path" d="M60 0 C60 90 60 180 60 330"></path>
-                </svg>
+        <div class="panel-stage">
+            <div class="visual-panel-system" id="light-switch" role="button" tabindex="0" aria-label="Website starten">
 
-                <div class="lamp-light"></div>
-                <div class="light-trail"></div>
+                <div class="visual-panel-device">
 
-                <div class="lamp-head">
-                    <div class="lamp-cap"></div>
-                    <div class="lamp-shade"></div>
+                    <div class="visual-panel-topbar">
+                        <div class="panel-top-left">
+                            <span>BT ELEKTROTECHNIK</span>
+                        </div>
+
+                        <div class="panel-top-center">
+                            <span>Gebäudeautomation aktiv</span>
+                        </div>
+
+                        <div class="panel-top-right">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <div class="visual-panel-screen">
+
+                        <aside class="panel-sidebar">
+                            <div class="sidebar-item active">
+                                <span></span>
+                                Home
+                            </div>
+
+                            <div class="sidebar-item">
+                                <span></span>
+                                Licht
+                            </div>
+
+                            <div class="sidebar-item">
+                                <span></span>
+                                Klima
+                            </div>
+
+                            <div class="sidebar-item">
+                                <span></span>
+                                Energie
+                            </div>
+                        </aside>
+
+                        <main class="panel-dashboard">
+
+                            <section class="dashboard-clock-card">
+                                <div class="clock-ring">
+                                    <div class="clock-inner">
+                                        <strong id="panel-current-time">--:--</strong>
+                                        <em id="panel-current-date">--. --.----</em>
+                                    </div>  
+                                </div>
+
+                                <div class="clock-data">
+                                    <span>Raumtemperatur</span>
+                                    <strong>22.5 °C</strong>
+                                    <small>Automatikbetrieb</small>
+                                </div>
+                            </section>
+
+                            <section class="dashboard-main-card">
+                                <div class="dashboard-card-head">
+                                    <div>
+                                        <span>Smart Building</span>
+                                        <strong>Gebäudesteuerung</strong>
+                                    </div>
+                                    <small>KNX</small>
+                                </div>
+
+                                <div class="dashboard-status-list">
+                                    <div>
+                                        <span>Licht</span>
+                                        <strong>Szene Wohnen aktiv</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Beschattung</span>
+                                        <strong>Automatik bereit</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Klima</span>
+                                        <strong>Komfortbetrieb</strong>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="dashboard-tile">
+                                <span>Lichtsteuerung</span>
+                                <strong>78%</strong>
+                                <small>Dimmwert</small>
+                            </section>
+
+                            <section class="dashboard-tile">
+                                <span>Beschattung</span>
+                                <strong>Auto</strong>
+                                <small>Raffstore</small>
+                            </section>
+
+                            <section class="dashboard-tile">
+                                <span>Energie</span>
+                                <strong>Optimiert</strong>
+                                <small>Monitoring</small>
+                            </section>
+
+                            <section class="dashboard-climate-card">
+                                <div>
+                                    <span>Raumklima</span>
+                                    <strong>21.8 °C</strong>
+                                </div>
+
+                                <div class="climate-control">
+                                    <button type="button">−</button>
+                                    <span>22.0</span>
+                                    <button type="button">+</button>
+                                </div>
+                            </section>
+
+                        </main>
+
+                    </div>
                 </div>
 
-                <div class="lamp-socket"></div>
-                <div class="lamp-bulb"></div>
-                
-                
-        <div class="mobile-pull-chain" aria-hidden="true">
-            <div class="mobile-chain-line"></div>
-            <div class="mobile-chain-handle"></div>
-        </div>
-
-                <div class="intro-brand">
-                    <strong>BT</strong>
-                    <span>Elektrotechnik</span>
-                    <small>Smart Energy. Perfectly Connected.</small>
-                </div>
+                <div class="panel-reflection"></div>
             </div>
         </div>
 
-        
-
-        <div class="intro-right">
-            <div class="intro-right-line"></div>
-            <p>Bewegung. Licht. Erlebnis.</p>
-        </div>
 
     </div>
+    <!-- Mobile-only Start Button (sichtbar nur auf kleinen Screens) -->
+    <div class="overlay-mobile-cta" id="overlay-mobile-cta">
+        <button type="button" id="pull-start-mobile" aria-label="Website öffnen">
+            <span class="overlay-mobile-cta-dot"></span>
+            Website öffnen
+        </button>
+        <p>Auf das Panel tippen oder den Button drücken</p>
     </div>
+
+    <div class="overlay-system-note">
+        <span></span>
+        System bereit · Website starten
+    </div>
+</div>
     
 
-    <nav class="fixed w-full z-50 bg-[#2A2A2A]/95 backdrop-blur-md border-b border-white/10 py-4">
-        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <a href="#" class="flex items-center justify-center md:justify-start gap-3">
-                <img src="./images/bt-logo-transparent-navbar.png" alt="BT Elektrotechnik Logo" class="w-20 h-10">
-                <!-- <div class="text-white font-condensed text-2xl font-bold tracking-tighter">
-                    BT <span class="text-gold">ELEKTROTECHNIK</span>
-                </div> -->
-            </a>
+    <nav class="site-navbar">
+    <div class="site-navbar-inner">
+        <a href="#" class="site-navbar-logo" aria-label="BT Elektrotechnik Startseite">
+            <img src="./images/bt_elektrotechnik_logo_final.png" alt="BT Elektrotechnik Logo">
+        </a>
 
-            <div class="flex items-center justify-center gap-8 md:gap-10 text-white/80 text-sm font-semibold uppercase tracking-wider">
-                <a href="#leistungen" class="hover:text-gold transition-colors">Leistungen</a>
-                <a href="#ueber-uns" class="hover:text-gold transition-colors">Über uns</a>
-                <a href="#kontakt" class="hover:text-gold transition-colors">Kontakt</a>
-            </div>
+        <div class="site-navbar-links" id="nav-links">
+            <a href="#leistungen">Leistungen</a>
+            <a href="#ueber-uns">Über uns</a>
+            <a href="#aktuelles">Aktuelles</a>
+            <a href="#kontakt">Kontakt</a>
         </div>
+
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
     </nav>
 
     <section class="relative min-h-screen flex items-center hero-gradient text-white pt-20">
@@ -120,10 +320,10 @@
                     <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase">Meisterbetrieb Hameln</span>
                 </div>
                 <h1 class="font-condensed text-6xl md:text-8xl font-extrabold leading-[0.9] mb-6 uppercase italic">
-                    Elektrotechnik,<br>die <span class="text-gold">begeistert.</span>
+                    Elektrotechnik in Hameln,<br>die <span class="text-gold">begeistert.</span>
                 </h1>
                 <p class="text-gray-400 text-lg mb-8 max-w-md">
-                    Präzision aus Hameln. Spezialisiert auf Planung, Installation und intelligente Gebäudeautomation.
+                    Ihr Elektrotechnikermeister in Hameln für Elektroinstallation, KNX-Gebäudeautomation, Wallboxen und moderne Elektrotechnik.
                 </p>
                 <div class="flex flex-wrap gap-4">
                     <a href="#kontakt" class="bg-gold text-white px-8 py-4 rounded-full font-bold uppercase text-sm hover:bg-white hover:text-dark transition-all">Jetzt anfragen</a>
@@ -132,7 +332,7 @@
             </div>
             <div class="hidden md:block relative">
                 <div class="absolute -inset-4 border border-gold/30 rounded-2xl"></div>
-                <img src="./images/btelektr.titel.png" alt="Elektrotechnik" class="rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition-all duration-700">
+                <img src="./images/btelektr.titel.png" alt="Elektrotechnik" loading="lazy" class="rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition-all duration-700">
             </div>
         </div>
     </section>
@@ -181,6 +381,10 @@
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Licht-, Steckdosen- und Schalterprogramme</li>
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Leitungsführung, Absicherung und Unterverteilungen</li>
                 </ul>
+                <a href="./elektroinstallation-hameln/"
+                   class="service-more-link">
+                    Mehr erfahren →
+                </a>
             </div>
 
             <!-- Smart Home / KNX -->
@@ -194,13 +398,11 @@
                 </div>
 
                 <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase text-gold">
-                    Smart Home & KNX
+                    KNX & Gebäudeautomation in Hameln
                 </h3>
 
                 <p class="text-gray-300 text-sm leading-7 mb-5">
-                    Intelligente Gebäudetechnik für mehr Komfort, Effizienz und Kontrolle. Wir planen
-                    und realisieren smarte Systeme, mit denen Licht, Beschattung, Heizung und Szenen
-                    zentral gesteuert werden können.
+                    Intelligente KNX-Gebäudeautomation in Hameln und Umgebung für mehr Komfort, Effizienz und Kontrolle. Wir planen und realisieren smarte Systeme, mit denen Licht, Beschattung, Heizung und individuelle Szenen zentral und zuverlässig gesteuert werden können.
                 </p>
 
                 <ul class="space-y-3 text-sm text-gray-300">
@@ -208,6 +410,10 @@
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Licht-, Jalousie- und Heizungssteuerung</li>
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Bedienpanels, Szenen und smarte Funktionen</li>
                 </ul>
+                <a href="./knx-gebaeudeautomation-hameln/"
+                   class="service-more-link">
+                    Mehr erfahren →
+                </a>
             </div>
 
             <!-- Elektroplanung -->
@@ -222,13 +428,11 @@
                 </div>
 
                 <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase">
-                    Elektroplanung
+                    Elektroplanung in Hameln
                 </h3>
 
                 <p class="text-gray-500 text-sm leading-7 mb-5">
-                    Gute Elektrotechnik beginnt mit einer durchdachten Planung. Wir betrachten Nutzung,
-                    Anforderungen und Zukunftssicherheit, damit Ihre Anlage nicht nur heute, sondern
-                    auch langfristig zuverlässig funktioniert.
+                    Durchdachte Elektroplanung in Hameln und Umgebung für Neubau, Sanierung und moderne Gebäudetechnik. Wir berücksichtigen Nutzung, Leistungsbedarf, Verteilungen, Stromkreise sowie zukünftige Erweiterungen, damit die elektrische Anlage sicher, funktional und langfristig ausgelegt ist.
                 </p>
 
                 <ul class="space-y-3 text-sm text-gray-500">
@@ -236,6 +440,9 @@
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Planung von Stromkreisen und Verteilungen</li>
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Abstimmung von Technik, Komfort und Sicherheit</li>
                 </ul>
+                <a href="./elektroplanung-hameln/" class="service-more-link">
+                    Mehr erfahren →
+                </a>
             </div>
 
             <!-- Verteilerbau -->
@@ -264,6 +471,9 @@
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Erweiterung bestehender Anlagen</li>
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Saubere Verdrahtung und strukturierter Aufbau</li>
                 </ul>
+                <a href="./verteilungen-anlagen-hameln/" class="service-more-link">
+                    Mehr erfahren →
+                </a>
             </div>
 
             <!-- E-Mobility -->
@@ -278,13 +488,11 @@
                 </div>
 
                 <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase">
-                    E-Mobility
+                    Wallbox & E-Mobility in Hameln
                 </h3>
 
                 <p class="text-gray-500 text-sm leading-7 mb-5">
-                    Wir schaffen die Grundlage für komfortables Laden zu Hause oder im gewerblichen
-                    Bereich. Von der Leitungsführung bis zur Absicherung wird die Ladeinfrastruktur
-                    passend zur vorhandenen Elektroanlage umgesetzt.
+                    Wir planen und installieren Wallbox-Lösungen in Hameln und Umgebung für private und gewerbliche Anwendungen. Von der Prüfung der vorhandenen Elektroanlage über Leitungsführung und Absicherung bis zur fachgerechten Einbindung der Ladeinfrastruktur wird die Ausführung passend zum vorhandenen Netz und zur Wallbox umgesetzt.
                 </p>
 
                 <ul class="space-y-3 text-sm text-gray-500">
@@ -292,6 +500,9 @@
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Prüfung der vorhandenen Elektroanlage</li>
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Fachgerechte Absicherung und Einbindung</li>
                 </ul>
+                <a href="./wallbox-hameln/" class="service-more-link">
+                    Mehr erfahren →
+                </a>
             </div>
 
             <!-- Prüfung und Sicherheit -->
@@ -304,13 +515,11 @@
                 </div>
 
                 <h3 class="service-title font-condensed text-2xl font-bold mb-4 uppercase text-gold">
-                    Prüfung & Sicherheit
+                    Prüfung & Sicherheit in Hameln
                 </h3>
 
                 <p class="text-gray-300 text-sm leading-7 mb-5">
-                    Sicherheit steht bei elektrotechnischen Anlagen an erster Stelle. Wir prüfen,
-                    analysieren und optimieren bestehende Installationen, damit Funktion, Schutz
-                    und Betriebssicherheit gewährleistet bleiben.
+                    Prüfung und Sicherheitsbewertung elektrischer Anlagen in Hameln und Umgebung. Wir prüfen bestehende Installationen, analysieren Auffälligkeiten und unterstützen bei Modernisierung, Fehlersuche und Instandsetzung, damit Schutzmaßnahmen, Funktion und Betriebssicherheit zuverlässig gewährleistet bleiben.
                 </p>
 
                 <ul class="space-y-3 text-sm text-gray-300">
@@ -318,6 +527,9 @@
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Prüfung bestehender Elektroanlagen</li>
                     <li class="flex gap-3"><span class="text-gold font-bold">✓</span> Modernisierung für mehr Sicherheit</li>
                 </ul>
+                <a href="./pruefung-sicherheit-hameln/" class="service-more-link">
+                    Mehr erfahren →
+                </a>
             </div>
 
         </div>
@@ -391,6 +603,17 @@
     </div>
     </section>
 
+    <section id="aktuelles" class="bt-news" aria-labelledby="bt-news-title">
+        <div class="bt-news-inner">
+            <p class="bt-news-eyebrow">BT Elektrotechnik · Hameln</p>
+            <h2 id="bt-news-title">Aktuelles aus der Elektrotechnik</h2>
+            <p class="bt-news-intro">Neuigkeiten rund um Photovoltaik, E-Mobilität und das vernetzte Zuhause – für Sie ausgewählt.</p>
+            <p id="bt-news-status" role="status">Aktuelle Beiträge werden geladen …</p>
+            <div id="bt-news-grid" class="bt-news-grid"></div>
+            <noscript><p>Bitte aktivieren Sie JavaScript, um die aktuellen Beiträge zu sehen.</p></noscript>
+        </div>
+    </section>
+
     <section id="kontakt" class="py-24 bg-gray-50">
         <div class="container mx-auto px-6 max-w-5xl">
             <div class="bg-white rounded-[3rem] shadow-2xl overflow-hidden grid md:grid-cols-2">
@@ -409,7 +632,7 @@
                     </div>
                 </div>
                 <div class="p-12">
-                    <form action="https://formspree.io/f/xnjwloko" method="POST" class="space-y-4">
+                    <form id="contact-form" action="https://formspree.io/f/xnjwloko" method="POST" class="space-y-4">
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Ihr Name</label>
                             <input type="text" name="name" required class="w-full bg-gray-50 border-b border-gray-200 py-3 focus:border-gold outline-none transition-colors">
@@ -422,7 +645,13 @@
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Nachricht</label>
                             <textarea name="message" rows="4" required class="w-full bg-gray-50 border-b border-gray-200 py-3 focus:border-gold outline-none transition-colors resize-none"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-dark text-white py-4 rounded-xl font-bold uppercase text-xs tracking-[0.2em] hover:bg-gold transition-all">Nachricht senden</button>
+                        <button type="submit" id="contact-submit" class="w-full bg-dark text-white py-4 rounded-xl font-bold uppercase text-xs tracking-[0.2em] hover:bg-gold transition-all">Nachricht senden</button>
+                        <div id="form-success" class="hidden text-center py-4 text-sm font-bold text-green-600 bg-green-50 rounded-xl">
+                            ✓ Nachricht gesendet – wir melden uns bald!
+                        </div>
+                        <div id="form-error" class="hidden text-center py-4 text-sm font-bold text-red-600 bg-red-50 rounded-xl">
+                            ✕ Fehler beim Senden – bitte versuchen Sie es erneut.
+                        </div>
                     </form>
                 </div>
             </div>
@@ -432,14 +661,16 @@
     <footer class="bg-dark py-12 text-center text-gray-500 text-[10px] uppercase tracking-widest border-t border-white/5">
         <div>
             <p>&copy; 2026 BT Elektrotechnik Hameln. Inhaber Tarik Bozüslü.</p>
-            <div>
+            <div class="flex items-center justify-center gap-6 mt-3">
             <a href="./impressum.html" class="hover:text-gold transition-colors">Impressum</a>
+            <span aria-hidden="true">·</span>
             <a href="./datenschutz.html" class="hover:text-gold transition-colors">Datenschutz</a>
             </div>
         </div>
     </footer>
 
-    <script src="./script.js?v=5" defer></script>
+    <script src="./script.js?v=10" defer></script>
+    <script src="./news.js?v=1" defer></script>
 
     <!-- COOKIE / PRIVACY NOTICE -->
     <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite">
