@@ -71,6 +71,7 @@
     <link rel="stylesheet" href="./dist/tailwind.css?v=1">
     <link rel="stylesheet" href="./style.css?v=14">
     <link rel="stylesheet" href="./news.css?v=1">
+    <link rel="stylesheet" href="./strompreis.css?v=1">
 
     <style>
         .service-more-link {
@@ -299,6 +300,7 @@
 
         <div class="site-navbar-links" id="nav-links">
             <a href="#leistungen">Leistungen</a>
+            <a href="#strompreis">Strompreis</a>
             <a href="#ueber-uns">Über uns</a>
             <a href="#aktuelles">Aktuelles</a>
             <a href="#kontakt">Kontakt</a>
@@ -537,6 +539,18 @@
 </section>
 
 
+    <section id="strompreis" class="bt-sp" aria-labelledby="bt-sp-title">
+        <div class="bt-sp-inner">
+            <p class="bt-sp-eyebrow">Energie · Börsenstrompreis</p>
+            <h2 id="bt-sp-title">Strompreis <span>heute</span></h2>
+            <p class="bt-sp-intro">Der aktuelle Börsenstrompreis in Deutschland – Stunde für Stunde. Mit dynamischem Stromtarif, Wallbox, Speicher oder Wärmepumpe lassen sich günstige Zeiten gezielt nutzen. Wir planen und installieren die passende Technik in Hameln und Umgebung.</p>
+            <div class="bt-sp-widget" data-strompreis data-mode="compact" data-api="./api/strompreis.php" data-more="./strompreis-heute/">
+                <noscript><p class="bt-sp-status">Bitte aktivieren Sie JavaScript, um die aktuellen Strompreise zu sehen.</p></noscript>
+            </div>
+        </div>
+    </section>
+
+
     <section id="ueber-uns" class="py-28 bg-white">
     <div class="container mx-auto px-6">
         <div class="grid md:grid-cols-2 gap-14 items-center">
@@ -671,6 +685,7 @@
 
     <script src="./script.js?v=10" defer></script>
     <script src="./news.js?v=1" defer></script>
+    <script src="./strompreis.js?v=1" defer></script>
 
     <!-- COOKIE / PRIVACY NOTICE -->
     <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite">
